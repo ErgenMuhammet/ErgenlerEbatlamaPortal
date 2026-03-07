@@ -1,0 +1,6 @@
+@ErgenlerEbatlamaPortalAPI_HostAddress = http://localhost:5293
+
+GET {{ErgenlerEbatlamaPortalAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

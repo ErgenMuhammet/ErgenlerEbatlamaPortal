@@ -1,0 +1,25 @@
+﻿using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
+namespace Application.Features.Command.MaterialTransactionCommand.UpdateBackPanel
+{
+    public class UpdateBackPanelCommandRequest : IRequest<UpdateBackPanelCommandResponse>
+    {
+        [JsonIgnore]
+        public string? OwnerId { get; set; }
+        [JsonIgnore]
+        public string? BackPanelId { get; set; }
+
+        public float Thickness { get; set; }
+        public string? Color { get; set; }
+        public string? Brand { get; set; }
+        public int Stock { get; set; }
+        public float Cost { get; set; }
+        public float Price { get; set; }
+    }
+}
