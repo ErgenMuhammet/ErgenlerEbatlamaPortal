@@ -110,7 +110,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseCors("AllowFrontend"); 
 
-app.UseAuthentication(); //Bu kim
+app.UseAuthentication(); //Bu kim kontrol et
 app.UseAuthorization(); //Girebilir mi
 
 app.MapControllers();
