@@ -1,5 +1,6 @@
 ﻿using Application.Interface;
 using Domain.Entitiy;
+using Domain.Entitiy.Jobs;
 using Domain.GlobalEnum;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -28,88 +29,102 @@ namespace Application.Features.Command.UserTransaction.Register
 
         public async Task<RegisterCommandResponse> Handle(RegisterCommandRequest request, CancellationToken cancellationToken)
         {
-            
-            var user = new AppUser
+            if (request.Password != request.PasswordConfirm)
             {
-                FullName = request.FullName,
-                PhoneNumber = request.PhoneNumber,
-                Email = request.Email,
-                BirthDate = request.BirthDate,
-                UserName = request.UserName,
-                City = request.City,
-
-                CreatedDate = DateTime.UtcNow,
-                IsDeleted = false,
-                UserCategory = request.UserCategory,
-            };
-
-            if (request.Password == request.PasswordConfirm)
-            {
-                await _userManager.CreateAsync(user, request.Password);
-
-                var UserAccounting = new ProfitLossSituation
-                {
-                    Date = DateTime.UtcNow,
-                    OwnerId = user.Id,
-                    TotalLoss = 0,
-                    TotalProfit = 0,
-                    LastSituation = 0,
-                };
-
-                var result = await _context.SaveChangesAsync(cancellationToken);
-
-                if (result >= 2)   
-                {
-                    try
-                    {
-                        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
-                        var encodedtoken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-                        string baseUrl = "http://localhost:5233";
-
-                        var confirmationLink = $"{baseUrl}/Portal/ConfirmEmail?userId={user.Id}&token={encodedtoken}";
-
-                        await _emailService.SendEmail(
-                           user.Email,
-                           "ErgenlerPortal Hesap Doğrulama",
-                           $"<h3>Hoşgeldiniz {user.FullName}!</h3><p>Hesabınızı doğrulamak ve giriş yapabilmek için lütfen <a href='{confirmationLink}'>buraya tıklayın</a>.</p>"
-                       );
-                    }
-
-                    catch (Exception ex)
-                    {
-
-                        return new RegisterCommandResponse
-                        {
-                            IsSucces = false,
-                            Message = "Kullanıcı oluşturulurken email servisinde hata meydana geldi.",
-                            Errors = ex.Message
-                        };
-                    }
-                    return new RegisterCommandResponse
-                    {
-                        Message = "Lütfen email adresinize gelen doğrulama linkine tıklayınız.",
-                        IsSucces = true
-                    };
-                }
-                else 
-                {
-                    return new RegisterCommandResponse
-                    {
-                        Message = "Hesap oluşturulurken bir hata oluştu lütfen tekrar deneyiniz",
-                        IsSucces = false
-                    };
-                }
-               
-            }
-            else {
                 return new RegisterCommandResponse
                 {
                     Message = "Şifreler uyuşmuyor tekrar deneyiniz.",
                     IsSucces = false
                 };
             }
+
+            var user = new AppUser
+            {
+                UserName = request.Email,
+                FullName = request.FullName,
+                PhoneNumber = request.PhoneNumber,
+                Email = request.Email,
+                BirthDate = request.BirthDate,
+                City = request.City,
+
+                UserCategory = request.UserCategory,
+            };
+           
+            var createUserResult = await _userManager.CreateAsync(user, request.Password);
+
+        
+            if (!createUserResult.Succeeded)
+            {
+                
+                var errors = string.Join(" - ", createUserResult.Errors.Select(e => e.Description)); // hata mesajlarını birleştirip sadece okunabilir olankları - ile ayırarak alıyoruz
+
+                return new RegisterCommandResponse
+                {
+                    Message = "Kullanıcı oluşturulurken kurallara takıldı: " + errors,
+                    IsSucces = false
+                };
+            }
+
+            
+            var UserAccounting = new ProfitLossSituation
+            {
+                Date = DateTime.UtcNow,
+                OwnerId = user.Id,
+                TotalLoss = 0,
+                TotalProfit = 0,
+                LastSituation = 0,
+            };
+
+            var BaseJobs = new BaseJobs
+            {
+                AdressDescription = "",
+                Category = request.UserCategory,
+                Experience = 0,
+                MastersName = request.FullName,
+                PhoneNumber = request.PhoneNumber,
+                UserId = user.Id,
+                WorkShopName = ""
+            };
+
+            await _context.AddAsync(BaseJobs, cancellationToken);
+            await _context.AddAsync(UserAccounting, cancellationToken);
+            var result = await _context.SaveChangesAsync(cancellationToken);
+
+            if (result <= 0)
+            {
+                return new RegisterCommandResponse
+                {
+                    IsSucces = false,
+                    Message = "Kullanıcı muhasebe hesabı açılırken bir hata ile karşılaşıldı"
+                };
+            }
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var EncodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+            string baseUrl = "http://localhost:5233";
+
+            var confirmationLink = $"{baseUrl}/Portal/ConfirmEmail?userId={user.Id}&token={EncodedToken}";
+
+            try
+            {
+                await _emailService.SendEmail(user.Email, "Hesap Doğrulama Linki", confirmationLink);
+            }
+            catch (Exception ex)
+            {
+                return new RegisterCommandResponse
+                {
+                    IsSucces = false,
+                    Message = "Kullanıcı doğrulama linki gönderilirken bir hata oluştu : " + ex.Message,
+                };
+            }
+
+            return new RegisterCommandResponse
+            {
+                IsSucces = true,
+                Message = "Lütfen Email hesabınıza gelen doğrulama linkine tıklayınız."
+            };
+
         }
     }
 }

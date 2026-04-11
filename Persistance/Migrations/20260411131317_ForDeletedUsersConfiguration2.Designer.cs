@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Context;
 
@@ -11,9 +12,11 @@ using Persistence.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    partial class IdentityContextModelSnapshot : ModelSnapshot
+    [Migration("20260411131317_ForDeletedUsersConfiguration2")]
+    partial class ForDeletedUsersConfiguration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -751,7 +754,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -766,7 +769,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -777,7 +780,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany("Invoice")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -798,7 +801,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany("BackPanel")
                         .HasForeignKey("OwnerID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Owner");
                 });
@@ -808,7 +811,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany("Glue")
                         .HasForeignKey("OwnerID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Owner");
                 });
@@ -818,7 +821,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany("Mdf")
                         .HasForeignKey("OwnerID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Owner");
                 });
@@ -852,7 +855,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -863,7 +866,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");

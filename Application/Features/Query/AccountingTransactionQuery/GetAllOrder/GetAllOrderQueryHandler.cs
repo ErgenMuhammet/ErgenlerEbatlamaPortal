@@ -40,12 +40,12 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetAllOrder
 
             var orders = await _context.Orders.Where(x => x.OwnerId == request.OwnerId).Select(x => new OrdersDto
             {
-                CostOfOrder = x.CostOfOrder,
+            //    CostOfOrder = x.CostOfOrder,
                 CountOfBackPanel = x.CountOfBackPanel,
                 CountOfMdf = x.CountOfMdf,
                 MetreOfPvcBand = x.MetreOfPvcBand,
                 OrderDate = x.OrderDate,
-                OrderName = x.OrderName,
+                //OrderName = x.OrderName,
             }).AsNoTracking().ToListAsync(cancellationToken);
 
             if (orders.Count > 0)

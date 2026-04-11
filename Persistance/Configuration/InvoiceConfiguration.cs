@@ -30,7 +30,7 @@ namespace Persistence.Configuration
                 HasOne(a => a.Owner).
                 WithMany(k => k.Invoice).
                 HasForeignKey(a => a.OwnerId).
-                OnDelete(DeleteBehavior.Restrict);
+                OnDelete(DeleteBehavior.Cascade);
 
         }
     }

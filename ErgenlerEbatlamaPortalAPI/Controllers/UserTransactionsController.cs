@@ -1,7 +1,5 @@
 ﻿using Application.Features.Command.UserTransaction.ConfirmEmail;
-using Application.Features.Command.UserTransaction.AssemblerUpdate;
-using Application.Features.Command.UserTransaction.CarpenterUpdate;
-using Application.Features.Command.UserTransaction.PanelSawyerUpdate;
+
 using Application.Features.Command.UserTransaction.PasswordRecovery;
 using Application.Features.Command.UserTransaction.Register;
 using Application.Features.Command.UserTransaction.ValidatePasswordToken;
@@ -55,49 +53,6 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             return Ok(result);
         }
 
-        [Authorize]
-        [HttpPost("Marangoz")]
-        public async Task<IActionResult> Carpenter([FromBody] CarpenterUpdateCommandRequest request)
-        {
-            
-            request.UserIdentifier = OwnerId;
-
-            var result = await _mediatR.Send(request);
-
-            if (!result.IsSucces)
-             return BadRequest(result);
-            
-
-            return Ok(result);
-        }
-
-        [Authorize]
-        [HttpPost("Ebatlamacı")]
-        public async Task<IActionResult> PanelSawyer([FromBody] PanelSawyerUpdateCommandRequest request)
-        {
-            request.UserIdentifier = OwnerId;
-
-            var result = await _mediatR.Send(request);
-
-            if (!result.IsSucces)
-                return BadRequest(result);
-
-            return Ok(result);
-        }
-
-        [Authorize]
-        [HttpPost("Montajcı")]
-        public async Task<IActionResult> Assebmler([FromBody] AssemblerUpdateCommandRequest request)
-        {
-            request.UserIdentifier = OwnerId;
-
-            var result = await _mediatR.Send(request);
-
-            if (!result.IsSucces)
-                return BadRequest(result);
-
-            return Ok(result);
-        }
     
         [HttpPost("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string userid, string token)

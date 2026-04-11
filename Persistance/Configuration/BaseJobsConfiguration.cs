@@ -23,10 +23,10 @@ namespace Persistence.Configuration
                                 HasValue(Category.Carpenter).
                                                 HasValue(Category.Carpenter);
             builder.HasOne(x => x.User).
-                WithOne().
+                WithOne(y => y.Jobs).
                 HasForeignKey<BaseJobs>(x => x.UserId).
                 IsRequired(false).
-                OnDelete(DeleteBehavior.NoAction);
+                OnDelete(DeleteBehavior.Cascade);
 
             
 

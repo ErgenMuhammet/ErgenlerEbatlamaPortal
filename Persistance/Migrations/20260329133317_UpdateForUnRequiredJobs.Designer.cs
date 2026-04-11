@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Context;
 
@@ -11,9 +12,11 @@ using Persistence.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    partial class IdentityContextModelSnapshot : ModelSnapshot
+    [Migration("20260329133317_UpdateForUnRequiredJobs")]
+    partial class UpdateForUnRequiredJobs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,6 +61,9 @@ namespace Persistence.Migrations
 
                     b.Property<bool>("IsUpdated")
                         .HasColumnType("bit");
+
+                    b.Property<Guid?>("JobsId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -108,6 +114,8 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("JobsId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -735,9 +743,15 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entitiy.AppUser", b =>
                 {
+                    b.HasOne("Domain.Entitiy.Jobs.BaseJobs", "Jobs")
+                        .WithMany()
+                        .HasForeignKey("JobsId");
+
                     b.HasOne("Domain.Entitiy.ProfitLossSituation", "Situation")
                         .WithMany()
                         .HasForeignKey("SituationId");
+
+                    b.Navigation("Jobs");
 
                     b.Navigation("Situation");
                 });
@@ -751,7 +765,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -766,7 +780,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -777,7 +791,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany("Invoice")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -786,9 +800,9 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Entitiy.Jobs.BaseJobs", b =>
                 {
                     b.HasOne("Domain.Entitiy.AppUser", "User")
-                        .WithOne("Jobs")
+                        .WithOne()
                         .HasForeignKey("Domain.Entitiy.Jobs.BaseJobs", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("User");
                 });
@@ -798,7 +812,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany("BackPanel")
                         .HasForeignKey("OwnerID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Owner");
                 });
@@ -808,7 +822,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany("Glue")
                         .HasForeignKey("OwnerID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Owner");
                 });
@@ -818,7 +832,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany("Mdf")
                         .HasForeignKey("OwnerID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Owner");
                 });
@@ -852,7 +866,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -863,7 +877,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -931,8 +945,6 @@ namespace Persistence.Migrations
                     b.Navigation("Income");
 
                     b.Navigation("Invoice");
-
-                    b.Navigation("Jobs");
 
                     b.Navigation("Mdf");
 

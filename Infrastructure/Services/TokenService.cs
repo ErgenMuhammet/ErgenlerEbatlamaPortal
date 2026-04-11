@@ -25,6 +25,11 @@ namespace Infrastructure.Services
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("FullName", user.FullName ?? ""),
+                new Claim(ClaimTypes.MobilePhone , user.PhoneNumber ?? ""),
+                new Claim("IsUpdated" , user.IsUpdated.ToString() ?? "false"),
+                new Claim ("UserCategory", user.UserCategory.ToString()),
+                
+
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? ""));

@@ -10,7 +10,6 @@ namespace Application.Features.Command.UserTransaction.Register
 {
     public class RegisterCommandRequest : IRequest<RegisterCommandResponse>
     {
-        public string UserName{ get; set; }
         public string? FullName { get; set; }
         public DateTime? BirthDate { get; set; }
         public Category UserCategory { get; set; }

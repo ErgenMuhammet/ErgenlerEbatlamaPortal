@@ -12,6 +12,7 @@ namespace Domain.Entitiy
 {
     public class AppUser : IdentityUser
     {
+        
         public string? FullName { get; set; }
         public string? PhotoUrl { get; set; }
         public DateTime? BirthDate { get; set; }
@@ -21,7 +22,7 @@ namespace Domain.Entitiy
         public bool IsUpdated { get; set; }
         
 
-        public BaseJobs Jobs{ get; set; }
+        public BaseJobs? Jobs{ get; set; }
        
         public ICollection<Mdf>? Mdf { get; set; }
         public ICollection<BackPanel>? BackPanel { get; set; } 
