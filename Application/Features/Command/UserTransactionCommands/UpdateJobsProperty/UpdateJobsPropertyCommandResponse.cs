@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Command.UserTransactionCommands.UpdateJobsProperty
 {
-    internal class UpdateJobsPropertyCommandResponse
+    public class UpdateJobsPropertyCommandResponse
     {
+        public bool IsSuccess { get; set; }
+        public string? Message { get; set; }
     }
 }

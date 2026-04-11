@@ -3,33 +3,29 @@ using Application.Interface;
 using Application.Registiration;
 using Domain.Entitiy;
 using Infrastructure;
+using Infrastructure.MiddleWare;
 using Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Persistence;
-using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Portal API", Version = "v1" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        // Name "Authorization" olarak kalmalý
+        
         Name = "Authorization",
         In = ParameterLocation.Header,
 
-        // KRÝTÝK DEÐÝÞÝKLÝKLER:
-        Type = SecuritySchemeType.Http, // ApiKey yerine Http seçiyoruz
-        Scheme = "bearer",             // Küçük harfle 'bearer' yazýyoruz
-        BearerFormat = "JWT",          // Formatýn JWT olduðunu belirtiyoruz
+        
+        Type = SecuritySchemeType.Http, 
+        Scheme = "bearer",             
+        BearerFormat = "JWT",          
 
         Description = "Sadece Token deðerini yapýþtýrýn. (Baþýna Bearer eklemenize gerek yoktur)"
     });
@@ -110,8 +106,10 @@ using (var scope = app.Services.CreateScope())
 
 app.UseCors("AllowFrontend"); 
 
-app.UseAuthentication(); //Bu kim
+app.UseAuthentication(); //Bu kim kontrol et
 app.UseAuthorization(); //Girebilir mi
+
+app.UseMiddleware<UserIsUpdatedMW>();
 
 app.MapControllers();
 

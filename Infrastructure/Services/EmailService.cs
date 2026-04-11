@@ -9,11 +9,11 @@ namespace Infrastructure.Services
     public class EmailService : IEmailService
     {
         private readonly IConfiguration _configuration;
-      
+
 
         public EmailService(IConfiguration configuration)
         {
-            _configuration = configuration;        
+            _configuration = configuration;
         }
 
         public async Task SendEmail(string toUser, string Subject, string htmlMessage)
@@ -27,7 +27,7 @@ namespace Infrastructure.Services
 
             var plainTextContent = System.Text.RegularExpressions.Regex.Replace(htmlMessage, "<[^>]*>", "");
 
-            var msg = MailHelper.CreateSingleEmail(from, to, Subject,plainTextContent, htmlMessage);
+            var msg = MailHelper.CreateSingleEmail(from, to, Subject, plainTextContent, htmlMessage);
 
             var response = await client.SendEmailAsync(msg);
             if (!response.IsSuccessStatusCode)
@@ -36,6 +36,6 @@ namespace Infrastructure.Services
                 throw new Exception($"SendGrid Hatası: {error}");
             }
         }
-        
+
     }
 }

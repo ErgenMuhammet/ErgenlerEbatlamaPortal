@@ -8,11 +8,12 @@ namespace Application.DTOs
 {
     public class OrdersDto
     {
-        public string? OrderName { get; set; }
+        public string? CustomerName { get; set; }
         public int? CountOfMdf { get; set; }
         public int? CountOfBackPanel { get; set; }
-        public float? MetreOfPvcBand { get; set; }
-        public float? CostOfOrder { get; set; }
-        public DateTime OrderDate { get; set; } = DateTime.Now.Date;
+        public float? MetreOfPvcBand { get; set; }     
+        public DateTime OrderDate { get; set; }
+        public List<SawnPieceForOrders> SawnPiece { get; set; }
+        public  float CostOfOrder{ get; set; }
     }
 }

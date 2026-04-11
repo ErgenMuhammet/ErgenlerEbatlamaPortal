@@ -6,13 +6,13 @@ namespace Domain.GlobalEnum
 {
    public enum Category
         {
-            [Description("MARANGOZ")]
+            [Description("Marangoz")]
             Carpenter = 0,
 
-            [Description("MONTAJCI")]
+            [Description("Montajcı")]
             Assembler = 1,
 
-            [Description("EBATLAMACI")]
+            [Description("Ebatlamacı")]
             PanelSawyer = 2,
 
             //[Description("Glue")]
