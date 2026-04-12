@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs
 {
-    public class SawnPieceForOrders
+    public class FileDetailDto
     {
-        public float Width { get; set; }
-        public float Height { get; set; }
-        public int Count { get; set; }
+        public string? FilePath { get; set; }
+        public string? FileName { get; set; }
     }
 }

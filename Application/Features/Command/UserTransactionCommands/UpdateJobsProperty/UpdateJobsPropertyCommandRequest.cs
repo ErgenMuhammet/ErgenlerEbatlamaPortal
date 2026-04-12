@@ -13,7 +13,7 @@ namespace Application.Features.Command.UserTransactionCommands.UpdateJobsPropert
     public class UpdateJobsPropertyCommandRequest : IRequest<UpdateJobsPropertyCommandResponse>
     {
         [JsonIgnore]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         public string? WorkShopName { get; set; }
         public string? AdressDescription { get; set; }

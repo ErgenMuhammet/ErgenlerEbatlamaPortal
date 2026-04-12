@@ -1,16 +1,16 @@
-﻿using Application.Features.Query.AccountingTransactionQuery.GetAllOrder;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Application.Features.Command.OrderTransactionCommands.AddOrder;
-using Application.Features.Command.OrderTransactionCommands.UpdateOrder;
+﻿using Application.Features.Command.OrderTransactionCommands.AddOrder;
 using Application.Features.Command.OrderTransactionCommands.DeleteOrder;
 using Application.Features.Command.OrderTransactionCommands.OrderIsDone;
+using Application.Features.Command.OrderTransactionCommands.UpdateOrder;
+using Application.Features.Query.OrderTransaction.GetAllMeasurements;
+using Application.Features.Query.OrderTransaction.GetAllOrdersList;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ErgenlerEbatlamaPortalAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("/portal/order")]
     public class OrderController : ControllerBase
@@ -40,16 +40,14 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
         }
 
 
-        [HttpPost("GetAllOrder")]
+        [HttpGet("GetAllOrder")]
         public async Task<IActionResult> GetAllOrder()
         {
-            var request = new GetAllIncomesQueryRequest();
-
-            request.OwnerId = OwnerId;
-
+            var request = new GetAllOrdersListRequest();
+           
             var result = await _mediatR.Send(request);
 
-            if (!result.IsSucces)
+            if (!result.IsSuccess)
             {
                 return BadRequest(result);
             }
@@ -110,6 +108,19 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
 
             return Ok(result);
 
+        }
+
+        [HttpGet("GetMeasurements")]
+        public async Task<IActionResult> GetTheMeasurementForSelectedCostumer([FromQuery] GetAllMeasurementsQueryRequest request)
+        {
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
     }
 }

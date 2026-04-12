@@ -17,7 +17,7 @@ namespace Infrastructure.Services
         {          
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IEmailService, EmailService>();
-
+            services.AddScoped<IFileReader, FileReaderService>();
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
