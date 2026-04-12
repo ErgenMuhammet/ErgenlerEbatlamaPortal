@@ -1,8 +1,8 @@
 ﻿using Application.Features.Command.UserTransaction.ConfirmEmail;
-
 using Application.Features.Command.UserTransaction.PasswordRecovery;
 using Application.Features.Command.UserTransaction.Register;
 using Application.Features.Command.UserTransaction.ValidatePasswordToken;
+using Application.Features.Command.UserTransactionCommands.UpdateJobsProperty;
 using Azure.Core;
 using Domain.Entitiy;
 using MediatR;
@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Application.Features.Query.GetUserTransactionQuery.Login;
+using Application.Features.Command.UpdateUserDefaultProperty;
 
 namespace ErgenlerEbatlamaPortalAPI.Controllers
 {
@@ -95,8 +96,37 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
                 return BadRequest(result);
 
             return Ok(result);
-        }      
+        }
         
+        [HttpPatch("UpdateMyProperty")]
+        public async Task<IActionResult> UpdateUserDefaultProperty([FromBody] UpdateUserDefaultPropertyCommandRequest request)
+        {
+            request.Id = OwnerId;
+            
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPatch("UpdateMyJobsProperty")]
+        public async Task<IActionResult> UpdateUserJobProperty([FromBody] UpdateJobsPropertyCommandRequest request)
+        {
+            request.UserId = OwnerId;
+
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
     }
 
 

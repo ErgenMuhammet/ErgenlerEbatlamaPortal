@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entitiy;
-using Application.Features.Query.AccountingTransactionQuery.GetAllOrder;
 
 namespace Application.Features.Query.AccountingTransactionQuery.GetAllIncomes
 {    

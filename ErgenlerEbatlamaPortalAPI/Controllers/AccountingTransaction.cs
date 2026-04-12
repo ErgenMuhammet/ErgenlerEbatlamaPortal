@@ -5,7 +5,7 @@ using Application.Features.Command.AccountingTransaction.PayTheInvoice;
 using Application.Features.Command.AccountingTransactionCommands.UpdateExpense;
 using Application.Features.Command.OrderTransactionCommands.DeleteOrder;
 using Application.Features.Query.AccountingTransactionQuery.GetAllExpense;
-using Application.Features.Query.AccountingTransactionQuery.GetAllOrder;
+using Application.Features.Query.AccountingTransactionQuery.GetAllIncomes;
 using Application.Features.Query.AccountingTransactionQuery.GetInvoices;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

@@ -9,7 +9,6 @@ using Application.Features.Command.MaterialTransactionCommand.UpdateMdf;
 using Application.Features.Command.MaterialTransactionCommand.UpdatePvcBand;
 using Application.Features.Command.MaterialTransactionCommand.UpdateScrap;
 using Application.Features.Query.GetMaterialQuery.BackPanelStock;
-using Application.Features.Query.GetMaterialQuery.GetMaterialStock;
 using Application.Features.Query.GetMaterialQuery.GetScraps;
 using Application.Features.Query.GetMaterialQuery.GlueStock;
 using Application.Features.Query.GetMaterialQuery.MdfStock;
