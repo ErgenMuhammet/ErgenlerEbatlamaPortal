@@ -12,5 +12,6 @@ namespace Application.Features.Query.OrderTransaction.GetAllMeasurements
         public bool IsSuccess { get; set; }
         public string? Message { get; set; }
         public OrdersDto? Orders { get; set; }
+        public List<MdfProportiesDTO>? MdfProporties { get; set; }
     }
 }

@@ -11,6 +11,8 @@ namespace Application.Interface
     {
         public Task<OrdersDto> ReadFile(string path,string OrderName);
         public Task<List<FileDetailDto>> ReadFile();
+        public Task<List<MdfProportiesDTO>> GetMdfCount(string path, string OrderName);
+
 
     }
 }

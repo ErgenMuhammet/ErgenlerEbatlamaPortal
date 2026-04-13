@@ -30,6 +30,7 @@ namespace Application.Features.Query.OrderTransaction.GetAllMeasurements
             }
 
             var Order = await _fileReader.ReadFile(request.Path,request.OrderName);
+            var proporties = await _fileReader.GetMdfCount(request.Path, request.OrderName);
 
             if (Order == null)
             {
@@ -53,7 +54,8 @@ namespace Application.Features.Query.OrderTransaction.GetAllMeasurements
             {
                 IsSuccess = true,
                 Message = "Sipariş başarıyla görüntülendi.",
-                Orders = Order
+                Orders = Order,
+                MdfProporties = proporties
             };
         }
     }

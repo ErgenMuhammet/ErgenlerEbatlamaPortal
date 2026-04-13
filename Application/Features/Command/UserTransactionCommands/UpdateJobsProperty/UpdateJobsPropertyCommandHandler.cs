@@ -37,9 +37,10 @@ namespace Application.Features.Command.UserTransactionCommands.UpdateJobsPropert
             user.Jobs.PhoneNumber = request.PhoneNumber;
             user.Jobs.MastersName = user.FullName;
             user.Jobs.UserId = request.UserId;
-            
+            user.IsUpdated = true;
             try
             {
+                
                 await _appContext.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)

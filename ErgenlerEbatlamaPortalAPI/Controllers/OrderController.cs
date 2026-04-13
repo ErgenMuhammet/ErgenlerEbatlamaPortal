@@ -5,6 +5,7 @@ using Application.Features.Command.OrderTransactionCommands.UpdateOrder;
 using Application.Features.Query.OrderTransaction.GetAllMeasurements;
 using Application.Features.Query.OrderTransaction.GetAllOrdersList;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -122,5 +123,7 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
 
             return Ok(result);
         }
+
+        
     }
 }

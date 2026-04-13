@@ -36,7 +36,7 @@ namespace Application.Features.Query.GetMaterialQuery.PvcBandStock
                 };
             }
 
-            List<PvcBandDto> PvcBandDto = await _Context.BackPanel.Where(x => x.OwnerID == Owner.Id).Select(m => new PvcBandDto
+            List<PvcBandDto> PvcBandDto = await _Context.PvcBand.Where(x => x.OwnerID == Owner.Id).Select(m => new PvcBandDto
             {
                 Color = m.Color,
                 Brand = m.Brand,

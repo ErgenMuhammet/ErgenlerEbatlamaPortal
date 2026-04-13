@@ -28,7 +28,7 @@ namespace Infrastructure
             })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<IdentityContext>() 
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders(); 
 
             services.AddScoped<IAppContext>(x => x.GetRequiredService<IdentityContext>());
 

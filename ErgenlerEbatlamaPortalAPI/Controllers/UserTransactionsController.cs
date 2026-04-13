@@ -97,7 +97,8 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
 
             return Ok(result);
         }
-        
+
+        [Authorize]
         [HttpPatch("UpdateMyProperty")]
         public async Task<IActionResult> UpdateUserDefaultProperty([FromBody] UpdateUserDefaultPropertyCommandRequest request)
         {
@@ -113,6 +114,7 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [HttpPatch("UpdateMyJobsProperty")]
         public async Task<IActionResult> UpdateUserJobProperty([FromBody] UpdateJobsPropertyCommandRequest request)
         {

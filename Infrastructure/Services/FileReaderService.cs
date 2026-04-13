@@ -37,8 +37,8 @@ namespace Infrastructure.Services
                     {
                         var Measurements = new SawnPieceForOrders();
 
-                        Measurements.Height = float.TryParse(columns[5], out float height) ? height /10f : 0f;
-                        Measurements.Width = float.TryParse(columns[6], out float width) ? width /10f : 0f;
+                        Measurements.Height = float.TryParse(columns[6], out float height) ? height / 10 : 0f;
+                        Measurements.Width = float.TryParse(columns[5], out float width) ? width /10 : 0f;
                         Measurements.Count = int.TryParse(columns[7], out int count) ? count : 0;
                         List.Add(Measurements);
                     }
@@ -75,7 +75,53 @@ namespace Infrastructure.Services
 
         }
 
-       
+        public async Task<List<MdfProportiesDTO>> GetMdfCount(string path, string OrderName)
+        {
+            if (!Directory.Exists(path))
+            {
+                throw new DirectoryNotFoundException("İlgili sipariş için excel dosyaları bulunamadı.");
+            }
+
+            var ExcelFiles = Directory.GetFileSystemEntries(path,"*.csv",SearchOption.TopDirectoryOnly).ToList();
+
+             List<MdfProportiesDTO> List = new List<MdfProportiesDTO>();
+            
+
+            foreach (var file in ExcelFiles)
+            {
+                var filecolumns = File.ReadLines(file, Encoding.GetEncoding(1254)).
+                    Where(x => !string.IsNullOrWhiteSpace(x)).TakeLast(2).ToList() ;
+
+                if (filecolumns.Count<2)
+                {
+                    throw new Exception("Excell dosyası satır sayısı eksik kullanılan mdf bilgilerine ulaşılamadı.");
+                }
+
+                var firstcolumn = filecolumns[0].Split(";");
+                var secondcolumn = filecolumns[1].Split(";");
+
+                var h = int.TryParse(firstcolumn[0], out int height) ? height : 0;
+                var w = int.TryParse(firstcolumn[1], out int width) ? width : 0;
+
+                var proporties = new MdfProportiesDTO
+                {
+                    Height = h > w ? h : w,
+                    Width = h > w ? w : h,
+                    MM = int.TryParse(firstcolumn[2], out int mm) ? mm : 0,
+                    Count = int.TryParse(secondcolumn[0], out int count) ? count : 0,
+                };
+                    List.Add(proporties);
+            }
+
+            return List.GroupBy(x => new { x.Height, x.Width, x.MM }).
+                Select(g => new MdfProportiesDTO
+                {
+                    Height = g.Key.Height,
+                    Width = g.Key.Width,
+                    MM = g.Key.MM,
+                    Count = g.Sum(x => x.Count)
+                }).ToList();            
+        }   
     }
 }
 

@@ -45,7 +45,7 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
         }
 
         [HttpPost("AddInvoice")]
-        public async Task<IActionResult> AddInvoice([FromBody] AddInvoiceCommandRequest request )
+        public async Task<IActionResult> AddInvoice([FromBody] AddInvoiceCommandRequest request ) 
         {
             request.OwnerId = OwnerId;
 

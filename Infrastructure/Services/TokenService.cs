@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens.Experimental;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Infrastructure.Services
@@ -32,9 +33,11 @@ namespace Infrastructure.Services
 
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? ""));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? "")); // Encoding.UTF8.GetBytes(...) → string'i byte dizisine çevirir
+                                                                                                         // SymmetricSecurityKey(...) → byte dizisinden simetrik anahtar oluşturur
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256); // Anahtarı + algoritmayı birleştirerek imzalama kimlik bilgisi oluşturur 
+                                                                                    // SHA-256 → Veriyi hash'ler (tek yönlü, geri döndürülemez)
+                                                                                    //HMAC → Hash'e gizli anahtar ekler, böylece sadece anahtara sahip olan doğrulayabilir
             var token = new JwtSecurityToken
             (
                 issuer: _configuration["Jwt:Issuer"],

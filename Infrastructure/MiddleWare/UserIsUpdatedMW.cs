@@ -22,17 +22,29 @@ namespace Infrastructure.MiddleWare
             
             _next = next;
         }
-
+        private static readonly string[] Path =
+        [
+            "/portal/login",
+            "/portal/UpdateMyJobsProperty",
+        ];
         public async Task Invoke(HttpContext _context , UserManager<AppUser> _userManager)
         {
-            
+            var path = _context.Request.Path.Value;
+
+            var IsContain = Path.Any(p => p.StartsWith(path,StringComparison.OrdinalIgnoreCase)); //StringComparison.OrdinalIgnoreCase büyük küçük fharf duyarlılığını kaldırır
+            if (IsContain)
+            {
+                await _next(_context);
+                return;
+            }
+
             if (_context.User.Identity.IsAuthenticated == true)
             {
-                bool UserUpdateInformation = bool.TryParse(_context.User.FindFirstValue("IsUpdated"), out bool IsUpdated);
+                bool UserUpdateInformation = bool.TryParse(_context.User.FindFirstValue("IsUpdated"), out bool IsUpdated) ? IsUpdated : false;
                 
                 if (!UserUpdateInformation)
                 {
-                    _context.Response.Redirect($"/portal/{_context.User.FindFirstValue("Category")}");
+                    _context.Response.Redirect($"/portal/{_context.User.FindFirstValue("UserCategory")}");
 
                     return;
                 }
