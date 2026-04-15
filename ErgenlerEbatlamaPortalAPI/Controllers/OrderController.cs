@@ -124,6 +124,20 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             return Ok(result);
         }
 
+        [HttpPost("AddAdvertisment")]
+        public async Task<IActionResult> AddAdvertisements([FromBody]AddAdvertisementsCommandRequest request)
+        {
+            request.OwnerId = OwnerId;
+
+            var result = await _mediatR.Send(request);
+
+            if (result.IsSucces)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
         
     }
 }

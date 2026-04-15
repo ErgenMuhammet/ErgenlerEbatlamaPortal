@@ -34,7 +34,7 @@ namespace Domain.Entitiy
         public ICollection<Income>?  Income { get; set; }
         public ProfitLossSituation? Situation { get; set; }
         public ICollection<Order>? Orders { get; set; }
-
+        public ICollection<Advertisements>? Advertisements{ get; set; }
 
         public Category UserCategory { get; set; }
 

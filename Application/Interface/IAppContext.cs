@@ -26,10 +26,7 @@ namespace Application.Interface
        public DbSet<Expense> Expense { get; set; }
        public DbSet<ProfitLossSituation> ProfitLossSituation { get; set; }
        public DbSet<Order> Orders { get; set; }
-
-
-
-
+       public DbSet<Advertisements> Advertisements { get; set; }
 
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken);

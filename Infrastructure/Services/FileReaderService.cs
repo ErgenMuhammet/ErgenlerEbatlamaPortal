@@ -31,15 +31,26 @@ namespace Infrastructure.Services
                         continue;
                     }
 
-                    var columns = line.Split('¶');
+                    var columns = line.Split(new char[] { '¶', 'ś' });
 
-                    if (columns.Length >= 8 )
+                    if (columns.Length >= 8)
                     {
+                        var LongSide1 = !string.IsNullOrEmpty(columns[9]);
+                        var LongSide2 = !string.IsNullOrEmpty(columns[10]);
+                        var ShortSide1 = !string.IsNullOrEmpty(columns[11]);
+                        var ShortSide2 = !string.IsNullOrEmpty(columns[12]);
+                    
                         var Measurements = new SawnPieceForOrders();
 
-                        Measurements.Height = float.TryParse(columns[6], out float height) ? height / 10 : 0f;
-                        Measurements.Width = float.TryParse(columns[5], out float width) ? width /10 : 0f;
+                        Measurements.Height = float.TryParse(columns[5], out float height) ? height / 10 : 0f;
+                        Measurements.Width = float.TryParse(columns[6], out float width) ? width /10 : 0f;
                         Measurements.Count = int.TryParse(columns[7], out int count) ? count : 0;
+                        Measurements.ShortSide1 = ShortSide1;
+                        Measurements.ShortSide2 = ShortSide2;
+
+                        Measurements.LongSide1 = LongSide1;
+                        Measurements.LongSide2 = LongSide2;
+
                         List.Add(Measurements);
                     }
                     else
@@ -63,7 +74,7 @@ namespace Infrastructure.Services
             {
                 throw new DirectoryNotFoundException($"İlgili klasor {MyPath} yolunda değil lütfen klasor yolunu kontrol ediniz.");
             }
-            var FilePath = Directory.GetFileSystemEntries(MyPath).ToList();
+            var FilePath =  Directory.GetFileSystemEntries(MyPath).ToList();
 
             List<FileDetailDto> FileDetail = FilePath.Select(x => new FileDetailDto
             {

@@ -31,6 +31,7 @@ namespace Persistence.Context
         public DbSet<Expense> Expense { get; set; }
         public DbSet<ProfitLossSituation> ProfitLossSituation { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Advertisements> Advertisements { get; set; }
 
         public IdentityContext(DbContextOptions<IdentityContext> options) : base(options)
         { 

@@ -11,5 +11,9 @@ namespace Application.DTOs
         public float Width { get; set; }
         public float Height { get; set; }
         public int Count { get; set; }
+        public bool LongSide1 { get; set; }
+        public bool LongSide2 { get; set; }
+        public bool ShortSide1 { get; set; } 
+        public bool ShortSide2 { get; set; }
     }
 }
