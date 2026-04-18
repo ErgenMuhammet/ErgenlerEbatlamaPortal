@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.Query.GetMyPastAdvertisement
+namespace Application.Features.Query.GetUserTransactionQuery.GetMyPastAdvertisement
 {
     public class GetMyPastAdvertisementQueryResponse
     {

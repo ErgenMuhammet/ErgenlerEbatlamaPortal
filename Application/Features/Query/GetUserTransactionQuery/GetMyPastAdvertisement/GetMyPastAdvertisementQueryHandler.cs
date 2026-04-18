@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.Query.GetMyPastAdvertisement
+namespace Application.Features.Query.GetUserTransactionQuery.GetMyPastAdvertisement
 {
     public class GetMyPastAdvertisementQueryHandler : IRequestHandler<GetMyPastAdvertisementQueryRequest, GetMyPastAdvertisementQueryResponse>
     {
@@ -64,8 +64,6 @@ namespace Application.Features.Query.GetMyPastAdvertisement
                 Advs = advs,
                 Message = "Geçmiş ilanlar başarıyla getirildi."
             };
-
         }
     }
-    
 }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Application.Features.Query.GetMyPastAdvertisement
+namespace Application.Features.Query.GetUserTransactionQuery.GetMyPastAdvertisement
 {
     public class GetMyPastAdvertisementQueryRequest : IRequest<GetMyPastAdvertisementQueryResponse>
     {

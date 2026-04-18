@@ -55,6 +55,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
 
 builder.Services.AddPersistenceService(builder.Configuration);
 builder.Services.AddApplicationServices(builder.Configuration);
@@ -72,7 +73,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-
+    
 
 var app = builder.Build();
 
@@ -110,7 +111,7 @@ app.UseAuthentication(); //Bu kim kontrol et
 app.UseAuthorization(); //Girebilir mi
 
 app.UseMiddleware<UserIsUpdatedMW>();
-
+app.MapHub<HubService>("Chat"); //parametre olarak hub sýnýfýný veriyoruz Chat endpointine gelindiðinde çalýþacak
 app.MapControllers();
 
 app.Run();

@@ -3,7 +3,7 @@ using Application.Features.Command.AdvertisementTransactionHandlers.DeleteAdvert
 using Application.Features.Command.AdvertisementTransactionHandlers.UpdateAdvertisement;
 using Application.Features.Query.GetAdvertisement;
 using Application.Features.Query.GetAllAdvertisementQuery;
-using Application.Features.Query.GetMyPastAdvertisement;
+using Application.Features.Query.GetUserTransactionQuery.GetMyPastAdvertisement;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

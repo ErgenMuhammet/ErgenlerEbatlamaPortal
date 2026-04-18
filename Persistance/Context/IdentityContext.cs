@@ -32,6 +32,7 @@ namespace Persistence.Context
         public DbSet<ProfitLossSituation> ProfitLossSituation { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Advertisements> Advertisements { get; set; }
+        public DbSet<ChatMessage> Messages { get; set; }
 
         public IdentityContext(DbContextOptions<IdentityContext> options) : base(options)
         { 
@@ -45,9 +46,7 @@ namespace Persistence.Context
 
             // Klasördeki TÜM konfigürasyonları otomatik yükle
             builder.ApplyConfigurationsFromAssembly(typeof(IdentityContext).Assembly);
-
-            // Diğer TPT tabloların (Örn: Marangozlar)
-            builder.Entity<BaseJobs>().ToTable("Jobs");            
+                  
         }
 
         public async Task AddAsync(object entity, CancellationToken cancellationToken = default)

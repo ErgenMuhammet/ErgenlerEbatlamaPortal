@@ -27,7 +27,7 @@ namespace Application.Interface
        public DbSet<ProfitLossSituation> ProfitLossSituation { get; set; }
        public DbSet<Order> Orders { get; set; }
        public DbSet<Advertisements> Advertisements { get; set; }
-
+       public DbSet<ChatMessage> Messages { get; set; }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken);
         public Task AddAsync(object entity, CancellationToken cancellationToken);    
