@@ -8,7 +8,7 @@ public class PvcBandConfiguration : IEntityTypeConfiguration<PvcBand>
     {
         builder.ToTable("PvcBands");
 
-        builder.HasIndex(x => new { x.Brand, x.Color, x.Thickness , x.OwnerID}).IsUnique();
+        builder.HasIndex(x => new { x.Brand, x.Color, x.Thickness , x.OwnerID }).IsUnique();
 
         builder.Property(x => x.Brand).HasColumnName("Brand");
         builder.Property(x => x.Color).HasMaxLength(50);

@@ -7,7 +7,7 @@ public class ScrapsConfiguration : IEntityTypeConfiguration<Scraps>
     public void Configure(EntityTypeBuilder<Scraps> builder)
     {
         builder.ToTable("Scraps");
-        builder.HasIndex(x => new { x.Color, x.Thickness, x.OwnerID }).IsUnique();
+        builder.HasIndex(x => new { x.Color, x.Thickness, x.OwnerID  , x.Width , x.Height , x.Weight}).IsUnique();
         
         
         builder.Property(x => x.Color).HasMaxLength(50);

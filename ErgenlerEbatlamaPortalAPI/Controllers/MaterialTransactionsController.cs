@@ -3,6 +3,11 @@ using Application.Features.Command.MaterialTransactionCommand.AddGlue;
 using Application.Features.Command.MaterialTransactionCommand.AddMdf;
 using Application.Features.Command.MaterialTransactionCommand.AddPvcBand;
 using Application.Features.Command.MaterialTransactionCommand.AddScrap;
+using Application.Features.Command.MaterialTransactionCommand.ReduceBackPanel;
+using Application.Features.Command.MaterialTransactionCommand.ReduceGlue;
+using Application.Features.Command.MaterialTransactionCommand.ReduceMdf;
+using Application.Features.Command.MaterialTransactionCommand.ReducePvcBand;
+using Application.Features.Command.MaterialTransactionCommand.ReduceScrap;
 using Application.Features.Command.MaterialTransactionCommand.UpdateBackPanel;
 using Application.Features.Command.MaterialTransactionCommand.UpdateGlue;
 using Application.Features.Command.MaterialTransactionCommand.UpdateMdf;
@@ -23,7 +28,7 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("Portal/")]
+    [Route("portal/")]
     public class MaterialTransactionsController : ControllerBase
     {
         private readonly IMediator _mediatR;
@@ -273,7 +278,76 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
 
             return Ok(result);
         }
+              
+        [HttpPut("Stock/Reduce/Mdf")]
+        public async Task<IActionResult> ReduceMdf([FromBody] ReduceMdfCommandRequest request)
+        {
+            request.OwnerID = OwnerId;
 
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("Stock/Reduce/PvcBand")]
+        public async Task<IActionResult> ReducePvcBand([FromBody] ReducePvcBandCommandRequest request)
+        {
+            request.OwnerId = OwnerId;
+
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("Stock/Reduce/Glue")]
+        public async Task<IActionResult> ReduceMdf([FromBody] ReduceGlueCommandRequest request)
+        {
+            request.OwnerID = OwnerId;
+
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("Stock/Reduce/Scrap")]
+        public async Task<IActionResult> ReduceMdf([FromBody] ReduceScrapCommandRequest request)
+        {
+            request.OwnerId = OwnerId;
+
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("Stock/Reduce/BackPanel")]
+        public async Task<IActionResult> BackPanel([FromBody] ReduceBackPanelCommandRequest request)
+        {
+            request.OwnerId = OwnerId;
+
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
 
     }
 }

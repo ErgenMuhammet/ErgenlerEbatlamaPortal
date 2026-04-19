@@ -11,6 +11,7 @@ namespace Application.Interface
     {
         Task SendMessage(string ReceiverId, string Message);
         Task MarkAsRead(string ReceiverId , string SenderId);
-        Task IsDelivered (string SenderId,string MessageId);
+        Task IsDelivered(string SenderId, string MessageId);
+        Task SendNotification(string OwnerId , string Message);
     }
 }

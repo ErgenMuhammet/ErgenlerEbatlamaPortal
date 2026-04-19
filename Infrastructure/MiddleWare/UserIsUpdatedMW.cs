@@ -26,12 +26,14 @@ namespace Infrastructure.MiddleWare
         [
             "/portal/login",
             "/portal/UpdateMyJobsProperty",
+            "/portal"
         ];
         public async Task Invoke(HttpContext _context , UserManager<AppUser> _userManager)
         {
             var path = _context.Request.Path.Value;
 
-            var IsContain = Path.Any(p => p.StartsWith(path,StringComparison.OrdinalIgnoreCase)); //StringComparison.OrdinalIgnoreCase büyük küçük fharf duyarlılığını kaldırır
+            var IsContain = Path.Any(p => p.StartsWith(path,StringComparison.OrdinalIgnoreCase)); //StringComparison.OrdinalIgnoreCase büyük küçük harf duyarlılığını kaldırır
+            
             if (IsContain)
             {
                 await _next(_context);

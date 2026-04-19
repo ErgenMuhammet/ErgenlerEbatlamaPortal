@@ -31,5 +31,9 @@ namespace Infrastructure.Services
         {
             await _hub.Clients.User(ReceiverId).SendAsync("SendMessage",Message);
         }
+        public async Task SendNotification(string OwnerId, string Message)
+        {
+            await _hub.Clients.User(OwnerId).SendAsync("SendNotification" , Message);
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("Portal/Accounting")]
+    [Route("portal/Accounting")]
     public class AccountingTransaction : ControllerBase
     {
         private readonly IMediator _mediatR;

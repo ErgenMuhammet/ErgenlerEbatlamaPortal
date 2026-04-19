@@ -111,7 +111,7 @@ app.UseAuthentication(); //Bu kim kontrol et
 app.UseAuthorization(); //Girebilir mi
 
 app.UseMiddleware<UserIsUpdatedMW>();
-app.MapHub<HubService>("Chat"); //parametre olarak hub sýnýfýný veriyoruz Chat endpointine gelindiðinde çalýþacak
+app.MapHub<HubService>("/portal"); //parametre olarak hub sýnýfýný veriyoruz Chat endpointine gelindiðinde çalýþacak
 app.MapControllers();
 
 app.Run();
