@@ -25,12 +25,4 @@ Proje, sürdürülebilir ve test edilebilir bir yapı sunan **Onion Architecture
 - **Persistence:** Veritabanı konfigürasyonları ve repositoryler.
 - **WebAPI:** Endpoint yönetimi ve middleware yapılandırmaları.
 
-## 📸 Ekran Görüntüleri
-*(Buraya projenin dashboard veya stok takip ekranlarından birer görsel eklemen çok etkili olur)*
-![Dashboard Dashboard](https://via.placeholder.com/800x400?text=Dashboard+Gorunumu)
 
-## ⚙️ Kurulum
-1. Repoyu clone'layın.
-2. `appsettings.json` dosyasındaki ConnectionString ve Email ayarlarını güncelleyin.
-3. `Update-Database` komutu ile migration'ları uygulayın.
-4. Projeyi çalıştırın.
