@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { materialService, orderService, accountingService } from '../../services/api';
 import {
   FiPackage, FiShoppingCart, FiDollarSign, FiTrendingUp,
-  FiPlus, FiList, FiPieChart
+  FiPlus, FiList, FiPieChart, FiSun, FiMoon
 } from 'react-icons/fi';
 import './Dashboard.css';
 
@@ -17,27 +17,33 @@ export default function Dashboard() {
     expenseTotal: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [isLightMode, setIsLightMode] = useState(() => document.body.classList.contains('light-theme'));
 
   useEffect(() => {
     loadStats();
   }, []);
 
+  const toggleTheme = () => {
+    const isLight = document.body.classList.toggle('light-theme');
+    setIsLightMode(isLight);
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  };
+
   const loadStats = async () => {
     try {
-      const [ordersRes, incomesRes, expensesRes] = await Promise.allSettled([
+      const [ordersRes, plRes] = await Promise.allSettled([
         orderService.getAllOrders(),
-        accountingService.getAllIncomes(),
-        accountingService.getAllExpenses(),
+        accountingService.getProfitLossSituation(),
       ]);
+
+      const plData = plRes.status === 'fulfilled' && plRes.value.data?.data 
+        ? plRes.value.data.data 
+        : { totalProfit: 0, totalLoss: 0 };
 
       setStats({
         orderCount: ordersRes.status === 'fulfilled' ? (ordersRes.value.data?.data?.length || 0) : 0,
-        incomeTotal: incomesRes.status === 'fulfilled'
-          ? (ordersRes.value.data?.data || []).reduce((sum, i) => sum + (i.amount || 0), 0)
-          : 0,
-        expenseTotal: expensesRes.status === 'fulfilled'
-          ? (expensesRes.value.data?.data || []).reduce((sum, e) => sum + (e.amount || 0), 0)
-          : 0,
+        incomeTotal: plData.totalProfit || 0,
+        expenseTotal: plData.totalLoss || 0,
       });
     } catch {
       // Stats will remain at defaults
@@ -79,10 +85,30 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      {/* Welcome */}
-      <div className="dashboard-welcome slide-up">
-        <h2>Hoş geldiniz, {user?.fullName || 'Kullanıcı'} 👋</h2>
-        <p>Ergenler Ebatlama Portal — işletmenizi tek noktadan yönetin.</p>
+      {/* Welcome & Theme Toggle */}
+      <div className="dashboard-welcome slide-up" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h2>Hoş geldiniz, {user?.fullName || 'Kullanıcı'} 👋</h2>
+          <p>Ergenler Ebatlama Portal — işletmenizi tek noktadan yönetin.</p>
+        </div>
+        <button 
+          onClick={toggleTheme} 
+          className="theme-toggle-btn" 
+          title="Tema Değiştir"
+          style={{
+            background: 'var(--surface-100)',
+            border: '1px solid var(--border-default)',
+            color: 'var(--text-primary)',
+            padding: '0.75rem',
+            borderRadius: 'var(--radius-full)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          {isLightMode ? <FiMoon size={20} /> : <FiSun size={20} />}
+        </button>
       </div>
 
       {/* Stats */}

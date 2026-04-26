@@ -29,7 +29,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceMdf
             }
 
             var Mdf = await _context.Mdf.
-                FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerID && x.Color == request.Color && x.Thickness == request.Thickness && x.Brand == request.Brand && x.Weight == request.Weight) ;
+                FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerID && x.Id.ToString() == request.MdfId);
 
             if (Mdf == null)
             {

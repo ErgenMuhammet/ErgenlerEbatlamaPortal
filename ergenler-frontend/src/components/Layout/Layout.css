@@ -205,7 +205,7 @@
   justify-content: space-between;
   padding: 0 var(--space-xl);
   border-bottom: 1px solid var(--border-subtle);
-  background: rgba(10, 10, 15, 0.8);
+  background: var(--glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   position: sticky;

@@ -13,10 +13,9 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceScrap
         [JsonIgnore]
         public string? OwnerId { get; set; }
 
-        public string Color { get; set; }
-        public float Thickness { get; set; }
-        public float Width { get; set; }
-        public float Height { get; set; }
+
+        [JsonIgnore]
+        public string? ScrapsId { get; set; }
 
         public int Count { get; set; }
     }

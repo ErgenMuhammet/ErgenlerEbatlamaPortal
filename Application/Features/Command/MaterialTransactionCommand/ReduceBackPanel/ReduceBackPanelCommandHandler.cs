@@ -23,7 +23,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceBackPane
             }
 
             var Backpanel = await _context.BackPanel.
-                FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerId && x.Color == request.Color && x.Thickness == request.Thickness && x.Brand == request.Brand);
+                FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerId && x.Id.ToString() == request.BackPanelId);
 
             if (Backpanel == null)
             {

@@ -1,4 +1,4 @@
-﻿import axios from 'axios';
+import axios from 'axios';
 
 const API_BASE_URL = '/portal';
 
@@ -48,32 +48,32 @@ export const authService = {
 // ===== MATERIALS / STOCK =====
 export const materialService = {
   // GET stock
-  getMdfStock: () => api.get('/Material/Stok/Mdf'),
-  getGlueStock: () => api.get('/Material/Stok/Glue'),
-  getBackPanelStock: () => api.get('/Material/Stok/BackPanel'),
-  getScraps: () => api.get('/Material/Stok/Scraps'),
-  getPvcBandStock: () => api.get('/Material/Stok/PvcBand'),
+  getMdfStock: () => api.get('/Stok/Mdf'),
+  getGlueStock: () => api.get('/Stok/Glue'),
+  getBackPanelStock: () => api.get('/Stok/BackPanel'),
+  getScraps: () => api.get('/Stok/Scraps'),
+  getPvcBandStock: () => api.get('/Stok/PvcBand'),
 
   // ADD stock
-  addMdf: (data) => api.post('/Material/Stok/AddMdf', data),
-  addGlue: (data) => api.post('/Material/Stok/AddGlue', data),
-  addBackPanel: (data) => api.post('/Material/Stok/AddBackPanel', data),
-  addPvcBand: (data) => api.post('/Material/Stok/AddPvcBand', data),
-  addScrap: (data) => api.post('/Material/Stok/AddScrap', data),
+  addMdf: (data) => api.post('/Stok/AddMdf', data),
+  addGlue: (data) => api.post('/Stok/AddGlue', data),
+  addBackPanel: (data) => api.post('/Stok/AddBackPanel', data),
+  addPvcBand: (data) => api.post('/Stok/AddPvcBand', data),
+  addScrap: (data) => api.post('/Stok/AddScrap', data),
 
   // UPDATE stock
-  updateMdf: (id, data) => api.put(`/Material/Update/Mdf/${id}`, data),
-  updateGlue: (id, data) => api.put(`/Material/Update/Glue/${id}`, data),
-  updateBackPanel: (id, data) => api.put(`/Material/Update/BackPanel/${id}`, data),
-  updatePvcBand: (id, data) => api.put(`/Material/Update/PvcBand/${id}`, data),
-  updateScrap: (id, data) => api.put(`/Material/Update/Scrap/${id}`, data),
+  updateMdf: (id, data) => api.put(`/Update/Mdf/${id}`, data),
+  updateGlue: (id, data) => api.put(`/Update/Glue/${id}`, data),
+  updateBackPanel: (id, data) => api.put(`/Update/BackPanel/${id}`, data),
+  updatePvcBand: (id, data) => api.put(`/Update/PvcBand/${id}`, data),
+  updateScrap: (id, data) => api.put(`/Update/Scrap/${id}`, data),
 
   // REDUCE stock
-  reduceMdf: (data) => api.put('/Material/Stock/Reduce/Mdf', data),
-  reduceGlue: (data) => api.put('/Material/Stock/Reduce/Glue', data),
-  reducePvcBand: (data) => api.put('/Material/Stock/Reduce/PvcBand', data),
-  reduceScrap: (data) => api.put('/Material/Stock/Reduce/Scrap', data),
-  reduceBackPanel: (data) => api.put('/Material/Stock/Reduce/BackPanel', data),
+  reduceMdf: (id, data) => api.put(`/Stock/Reduce/Mdf/${id}`, data),
+  reduceGlue: (id, data) => api.put(`/Stock/Reduce/Glue/${id}`, data),
+  reducePvcBand: (id, data) => api.put(`/Stock/Reduce/PvcBand/${id}`, data),
+  reduceScrap: (id, data) => api.put(`/Stock/Reduce/Scraps/${id}`, data),
+  reduceBackPanel: (id, data) => api.put(`/Stock/Reduce/BackPanel/${id}`, data),
 };
 
 // ===== ORDERS =====
@@ -90,6 +90,7 @@ export const orderService = {
 export const accountingService = {
   // Invoices
   getAllInvoices: () => api.get('/Accounting/GetAllInvoice'),
+  getPayedInvoices: () => api.get('/Accounting/GetPayedInvoice'),
   addInvoice: (data) => api.post('/Accounting/AddInvoice', data),
   payInvoice: (id) => api.post(`/Accounting/MarkThePayedToInvoice/${id}`),
 
@@ -101,6 +102,9 @@ export const accountingService = {
   // Incomes
   getAllIncomes: () => api.get('/Accounting/GetAllIncome'),
   addIncome: (data) => api.post('/Accounting/AddIncome', data),
+  
+  // Profit & Loss
+  getProfitLossSituation: () => api.get('/Accounting/GetProfitLossSituation'),
 };
 
 // ===== ADVERTISEMENTS =====

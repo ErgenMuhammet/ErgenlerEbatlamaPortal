@@ -1,4 +1,4 @@
-﻿using Application.Interface;
+using Application.Interface;
 using Domain.Entitiy;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -35,10 +35,30 @@ namespace Application.Features.Command.UpdateUserDefaultProperty
                 };
             }
 
-            User.FullName = request.FullName;
-            User.BirthDate = request.BirthDate;
-            User.PhoneNumber = request.PhoneNumber;
-            User.City = request.City;
+            if (!string.IsNullOrEmpty(request.FullName)) User.FullName = request.FullName;
+            if (request.BirthDate.HasValue) User.BirthDate = request.BirthDate;
+            if (!string.IsNullOrEmpty(request.PhoneNumber)) User.PhoneNumber = request.PhoneNumber;
+            if (!string.IsNullOrEmpty(request.City)) User.City = request.City;
+
+            if (!string.IsNullOrEmpty(request.Email))
+            {
+                User.Email = request.Email;
+                User.UserName = request.Email;
+            }
+
+            if (!string.IsNullOrEmpty(request.Password))
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(User);
+                var resetResult = await _userManager.ResetPasswordAsync(User, token, request.Password);
+                if (!resetResult.Succeeded)
+                {
+                    return new UpdateUserDefaultPropertyCommandResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Şifre güncellenemedi: " + string.Join(", ", resetResult.Errors.Select(e => e.Description))
+                    };
+                }
+            }
 
             try
             {

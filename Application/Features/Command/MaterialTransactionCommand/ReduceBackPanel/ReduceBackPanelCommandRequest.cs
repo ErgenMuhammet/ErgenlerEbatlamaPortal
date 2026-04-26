@@ -13,10 +13,10 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceBackPane
         [JsonIgnore]
         public string? OwnerId { get; set; }
 
-        public string Color { get; set; }
-        public float Thickness { get; set; }
-        public string Brand { get; set; }
+        [JsonIgnore]
+        public string? BackPanelId { get; set; }
 
+        
         public int Count { get; set; } 
     }
 }

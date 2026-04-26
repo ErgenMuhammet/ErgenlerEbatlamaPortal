@@ -75,7 +75,9 @@ export default function Layout() {
             <div className="sidebar-logo-icon">EP</div>
             <div className="sidebar-logo-text">
               <h1>Ergenler Portal</h1>
-              <span>Ebatlama Yönetimi</span>
+              <span style={{ fontSize: '0.85rem', color: 'var(--primary-color)' }}>
+                {user?.fullName || 'Ebatlama Yönetimi'}
+              </span>
             </div>
           </div>
         </div>

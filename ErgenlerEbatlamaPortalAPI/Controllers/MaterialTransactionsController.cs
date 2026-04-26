@@ -280,9 +280,10 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             return Ok(result);
         }
               
-        [HttpPut("Stock/Reduce/Mdf")]
-        public async Task<IActionResult> ReduceMdf([FromBody] ReduceMdfCommandRequest request)
+        [HttpPut("Stock/Reduce/Mdf/{MdfId}")]
+        public async Task<IActionResult> ReduceMdf([FromBody] ReduceMdfCommandRequest request,[FromRoute] string MdfId)
         {
+            request.MdfId = MdfId;
             request.OwnerID = OwnerId;
 
             var result = await _mediatR.Send(request);
@@ -294,11 +295,11 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("Stock/Reduce/PvcBand")]
-        public async Task<IActionResult> ReducePvcBand([FromBody] ReducePvcBandCommandRequest request)
+        [HttpPut("Stock/Reduce/PvcBand/{PvcBandId}")]
+        public async Task<IActionResult> ReducePvcBand([FromBody] ReducePvcBandCommandRequest request,[FromRoute] string PvcBandId)
         {
             request.OwnerId = OwnerId;
-
+            request.PvcBandId = PvcBandId;
             var result = await _mediatR.Send(request);
 
             if (!result.IsSuccess)
@@ -308,11 +309,11 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("Stock/Reduce/Glue")]
-        public async Task<IActionResult> ReduceMdf([FromBody] ReduceGlueCommandRequest request)
+        [HttpPut("Stock/Reduce/Glue/{GlueId}")]
+        public async Task<IActionResult> ReduceGlue([FromBody] ReduceGlueCommandRequest request, [FromRoute] string GlueId)
         {
             request.OwnerID = OwnerId;
-
+            request.GlueId = GlueId;
             var result = await _mediatR.Send(request);
 
             if (!result.IsSuccess)
@@ -322,11 +323,11 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("Stock/Reduce/Scrap")]
-        public async Task<IActionResult> ReduceMdf([FromBody] ReduceScrapCommandRequest request)
+        [HttpPut("Stock/Reduce/Scraps/{ScrapsId}")]
+        public async Task<IActionResult> ReduceScrap([FromBody] ReduceScrapCommandRequest request,[FromRoute] string ScrapsId)
         {
-            request.OwnerId = OwnerId;
-
+            request.ScrapsId = ScrapsId;
+            request.OwnerId= OwnerId;
             var result = await _mediatR.Send(request);
 
             if (!result.IsSuccess)
@@ -336,11 +337,11 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("Stock/Reduce/BackPanel")]
-        public async Task<IActionResult> BackPanel([FromBody] ReduceBackPanelCommandRequest request)
+        [HttpPut("Stock/Reduce/BackPanel/{BackPanelId}")]
+        public async Task<IActionResult> BackPanel([FromBody] ReduceBackPanelCommandRequest request, [FromRoute] string BackPanelId)
         {
             request.OwnerId = OwnerId;
-
+            request.BackPanelId = BackPanelId;
             var result = await _mediatR.Send(request);
 
             if (!result.IsSuccess)

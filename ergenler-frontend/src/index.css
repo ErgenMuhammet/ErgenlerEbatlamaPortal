@@ -86,6 +86,30 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
+/* Light Theme Overrides */
+.light-theme {
+  --surface-0: #f8fafc;
+  --surface-50: #f1f5f9;
+  --surface-100: #e2e8f0;
+  --surface-200: #cbd5e1;
+  --surface-300: #94a3b8;
+  --surface-400: #64748b;
+  --surface-500: #475569;
+
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-inverse: #f8fafc;
+
+  --border-subtle: rgba(0, 0, 0, 0.05);
+  --border-default: rgba(0, 0, 0, 0.1);
+  --border-strong: rgba(0, 0, 0, 0.15);
+
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
 /* --- CSS Reset & Base --- */
 *,
 *::before,

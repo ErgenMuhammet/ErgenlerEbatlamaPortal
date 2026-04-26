@@ -10,8 +10,10 @@ export default function Accounting() {
   const [invoices, setInvoices] = useState([]);
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const [pastInvoices, setPastInvoices] = useState([]);
+  const [profitLoss, setProfitLoss] = useState({ totalProfit: 0, totalLoss: 0, lastSituation: 0 });
   const [loading, setLoading] = useState(true);
-  const [modal, setModal] = useState(null); // 'income' | 'expense' | 'invoice' | null
+  const [modal, setModal] = useState(null); // 'income' | 'expense' | 'invoice' | 'pastInvoices' | null
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
@@ -21,24 +23,22 @@ export default function Accounting() {
   const loadAll = async () => {
     setLoading(true);
     try {
-      const [inv, inc, exp] = await Promise.allSettled([
+      const [inv, inc, exp, pl] = await Promise.allSettled([
         accountingService.getAllInvoices(),
         accountingService.getAllIncomes(),
         accountingService.getAllExpenses(),
+        accountingService.getProfitLossSituation(),
       ]);
-      setInvoices(inv.status === 'fulfilled' ? (inv.value.data?.data || []) : []);
-      setIncomes(inc.status === 'fulfilled' ? (inc.value.data?.data || []) : []);
-      setExpenses(exp.status === 'fulfilled' ? (exp.value.data?.data || []) : []);
+      setInvoices(inv.status === 'fulfilled' ? (inv.value.data?.invoices || []) : []);
+      setIncomes(inc.status === 'fulfilled' ? (inc.value.data?.incomes || []) : []);
+      setExpenses(exp.status === 'fulfilled' ? (exp.value.data?.expenses || []) : []);
+      setProfitLoss(pl.status === 'fulfilled' && pl.value.data?.data ? pl.value.data.data : { totalProfit: 0, totalLoss: 0, lastSituation: 0 });
     } catch {
       // fallback
     } finally {
       setLoading(false);
     }
   };
-
-  const totalIncome = incomes.reduce((s, i) => s + (i.amount || 0), 0);
-  const totalExpense = expenses.reduce((s, e) => s + (e.amount || 0), 0);
-  const netAmount = totalIncome - totalExpense;
 
   const handleSave = async () => {
     try {
@@ -50,6 +50,18 @@ export default function Accounting() {
       loadAll();
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleOpenPastInvoices = async () => {
+    try {
+      const res = await accountingService.getPayedInvoices();
+      setPastInvoices(res.data?.invoices || []);
+      setModal('pastInvoices');
+    } catch (err) {
+      console.error(err);
+      setPastInvoices([]);
+      setModal('pastInvoices');
     }
   };
 
@@ -76,15 +88,15 @@ export default function Accounting() {
       <div className="accounting-summary">
         <div className="summary-card slide-up">
           <div className="summary-card-label">Toplam Gelir</div>
-          <div className="summary-card-value income">₺{totalIncome.toLocaleString('tr-TR')}</div>
+          <div className="summary-card-value income">₺{(profitLoss.totalProfit || 0).toLocaleString('tr-TR')}</div>
         </div>
         <div className="summary-card slide-up" style={{ animationDelay: '0.1s' }}>
           <div className="summary-card-label">Toplam Gider</div>
-          <div className="summary-card-value expense">₺{totalExpense.toLocaleString('tr-TR')}</div>
+          <div className="summary-card-value expense">₺{(profitLoss.totalLoss || 0).toLocaleString('tr-TR')}</div>
         </div>
         <div className="summary-card slide-up" style={{ animationDelay: '0.2s' }}>
           <div className="summary-card-label">Net Durum</div>
-          <div className="summary-card-value net">₺{netAmount.toLocaleString('tr-TR')}</div>
+          <div className="summary-card-value net">₺{((profitLoss.totalProfit || 0) - (profitLoss.totalLoss || 0)).toLocaleString('tr-TR')}</div>
         </div>
       </div>
 
@@ -94,26 +106,34 @@ export default function Accounting() {
           <span className="accounting-section-title">
             <FiFileText className="icon" /> Faturalar
           </span>
-          <button className="add-btn" onClick={() => { setFormData({}); setModal('invoice'); }}>
-            <FiPlus /> Fatura Ekle
-          </button>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button className="add-btn" style={{ backgroundColor: 'var(--surface-light)', color: 'var(--text)' }} onClick={handleOpenPastInvoices}>
+              Geçmiş Faturalar
+            </button>
+            <button className="add-btn" onClick={() => { setFormData({}); setModal('invoice'); }}>
+              <FiPlus /> Fatura Ekle
+            </button>
+          </div>
         </div>
         <div className="invoice-list">
           {invoices.length === 0 ? (
             <div className="empty-state"><p>Henüz fatura yok</p></div>
           ) : (
             invoices.map((inv) => (
-              <div key={inv.id} className="invoice-item">
+              <div key={inv.id || inv.Id} className="invoice-item">
                 <div className="invoice-info">
-                  <span className="invoice-name">{inv.invoiceName || 'İsimsiz'}</span>
-                  <span className="invoice-no">No: {inv.invoiceNo || '-'}</span>
+                  <span className="invoice-name">{inv.name || inv.Name || inv.invoiceName || inv.InvoiceName || 'İsimsiz'}</span>
+                  <span className="invoice-no">No: {inv.invoicesNo || inv.InvoicesNo || inv.invoiceNo || inv.InvoiceNo || '-'}</span>
+                  <span className="invoice-no" style={{ marginTop: '0.25rem', color: 'var(--text-secondary)' }}>
+                    Son Ödeme: {(inv.lastPaymentDate || inv.LastPaymentDate) ? new Date(inv.lastPaymentDate || inv.LastPaymentDate).toLocaleDateString('tr-TR') : '-'}
+                  </span>
                 </div>
                 <div className="invoice-actions">
-                  <span className="invoice-amount">₺{(inv.cost || 0).toLocaleString('tr-TR')}</span>
-                  {inv.beenPaid ? (
+                  <span className="invoice-amount">₺{(inv.price || inv.Price || inv.cost || inv.Cost || 0).toLocaleString('tr-TR')}</span>
+                  {inv.beenPaid || inv.BeenPaid ? (
                     <span className="paid-badge">✓ Ödendi</span>
                   ) : (
-                    <button className="pay-btn" onClick={() => handlePayInvoice(inv.id)}>
+                    <button className="pay-btn" onClick={() => handlePayInvoice(inv.id || inv.Id)}>
                       <FiCheck /> Öde
                     </button>
                   )}
@@ -198,12 +218,36 @@ export default function Accounting() {
                 {modal === 'income' && 'Gelir Ekle'}
                 {modal === 'expense' && 'Gider Ekle'}
                 {modal === 'invoice' && 'Fatura Ekle'}
+                {modal === 'pastInvoices' && 'Geçmiş Faturalar'}
               </h3>
               <button className="modal-close" onClick={() => setModal(null)}>
                 <FiX />
               </button>
             </div>
             <div className="modal-body">
+              {modal === 'pastInvoices' && (
+                <div className="invoice-list" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+                  {pastInvoices.length === 0 ? (
+                    <div className="empty-state"><p>Geçmiş fatura yok</p></div>
+                  ) : (
+                    pastInvoices.map((inv) => (
+                      <div key={inv.id || inv.Id} className="invoice-item">
+                        <div className="invoice-info">
+                          <span className="invoice-name">{inv.name || inv.Name || inv.invoiceName || inv.InvoiceName || 'İsimsiz'}</span>
+                          <span className="invoice-no">No: {inv.invoicesNo || inv.InvoicesNo || inv.invoiceNo || inv.InvoiceNo || '-'}</span>
+                          <span className="invoice-no" style={{ marginTop: '0.25rem', color: 'var(--text-secondary)' }}>
+                            Son Ödeme: {(inv.lastPaymentDate || inv.LastPaymentDate) ? new Date(inv.lastPaymentDate || inv.LastPaymentDate).toLocaleDateString('tr-TR') : '-'}
+                          </span>
+                        </div>
+                        <div className="invoice-actions">
+                          <span className="invoice-amount">₺{(inv.price || inv.Price || inv.cost || inv.Cost || 0).toLocaleString('tr-TR')}</span>
+                          <span className="paid-badge">✓ Ödendi</span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
               {modal === 'invoice' && (
                 <>
                   <div className="form-group">
@@ -236,6 +280,15 @@ export default function Accounting() {
                       onChange={(e) => setFormData({ ...formData, cost: Number(e.target.value) })}
                     />
                   </div>
+                  <div className="form-group">
+                    <label className="form-label">Son Ödeme Tarihi</label>
+                    <input
+                      className="form-input"
+                      type="date"
+                      value={formData.lastPaymentDate || ''}
+                      onChange={(e) => setFormData({ ...formData, lastPaymentDate: e.target.value })}
+                    />
+                  </div>
                 </>
               )}
               {(modal === 'income' || modal === 'expense') && (
@@ -264,8 +317,10 @@ export default function Accounting() {
               )}
             </div>
             <div className="modal-footer">
-              <button className="btn-cancel" onClick={() => setModal(null)}>İptal</button>
-              <button className="btn-save" onClick={handleSave}>Kaydet</button>
+              <button className="btn-cancel" onClick={() => setModal(null)}>Kapat</button>
+              {modal !== 'pastInvoices' && (
+                <button className="btn-save" onClick={handleSave}>Kaydet</button>
+              )}
             </div>
           </div>
         </div>

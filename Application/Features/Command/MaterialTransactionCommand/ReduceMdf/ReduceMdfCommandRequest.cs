@@ -12,10 +12,10 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceMdf
     {
         [JsonIgnore]
         public string? OwnerID { get; set; }
-        public int Weight { get; set; }
-        public string Brand { get; set; }
-        public string Color { get; set; }
-        public float Thickness { get; set; }
+
+        [JsonIgnore]
+        public string? MdfId { get; set; }
+
         public int Count { get; set; }
     }
 }

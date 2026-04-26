@@ -27,7 +27,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceScrap
             }
 
             var Scrap = await _context.Scraps.
-                FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerId && x.Color == request.Color && x.Thickness == request.Thickness);
+                FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerId && x.Id.ToString() == request.ScrapsId);
 
 
             if (Scrap.Stock == 0)

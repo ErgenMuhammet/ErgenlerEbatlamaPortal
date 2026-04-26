@@ -3,6 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Login.css';
 
+const TURKEY_CITIES = [
+  "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya", "Ankara", "Antalya", "Artvin", "Aydın", "Balıkesir",
+  "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli",
+  "Diyarbakır", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari",
+  "Hatay", "Isparta", "Mersin", "İstanbul", "İzmir", "Kars", "Kastamonu", "Kayseri", "Kırklareli", "Kırşehir",
+  "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Kahramanmaraş", "Mardin", "Muğla", "Muş", "Nevşehir",
+  "Niğde", "Ordu", "Rize", "Sakarya", "Samsun", "Siirt", "Sinop", "Sivas", "Tekirdağ", "Tokat",
+  "Trabzon", "Tunceli", "Şanlıurfa", "Uşak", "Van", "Yozgat", "Zonguldak", "Aksaray", "Bayburt", "Karaman",
+  "Kırıkkale", "Batman", "Şırnak", "Bartın", "Ardahan", "Iğdır", "Yalova", "Karabük", "Kilis", "Osmaniye", "Düzce"
+];
+
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -16,9 +27,12 @@ export default function Login() {
   // Register form state
   const [registerData, setRegisterData] = useState({
     fullName: '',
+    birthDate: '',
+    userCategory: 1,
     email: '',
-    userName: '',
     password: '',
+    passwordConfirm: '',
+    phoneNumber: '',
     city: '',
   });
 
@@ -34,7 +48,11 @@ export default function Login() {
         setError(result.message);
       }
     } catch (err) {
-      setError('Kullanıcı adı veya şifre hatalı');
+      if (!err.response) {
+        setError('Sunucuya ulaşılamıyor veya ağ hatası.');
+      } else {
+        setError('Kullanıcı adı veya şifre hatalı');
+      }
     } finally {
       setLoading(false);
     }
@@ -144,16 +162,55 @@ export default function Login() {
               />
             </div>
             <div className="form-group">
-              <label className="form-label" htmlFor="reg-username">Kullanıcı Adı</label>
+              <label className="form-label" htmlFor="reg-phone">Telefon</label>
               <input
-                id="reg-username"
+                id="reg-phone"
+                className="form-input"
+                type="tel"
+                placeholder="05xxxxxxxxx"
+                value={registerData.phoneNumber}
+                onChange={(e) => setRegisterData({ ...registerData, phoneNumber: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="reg-birthdate">Doğum Tarihi</label>
+              <input
+                id="reg-birthdate"
+                className="form-input"
+                type="date"
+                value={registerData.birthDate}
+                onChange={(e) => setRegisterData({ ...registerData, birthDate: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="reg-category">Kategori</label>
+              <select
+                id="reg-category"
+                className="form-input"
+                value={registerData.userCategory}
+                onChange={(e) => setRegisterData({ ...registerData, userCategory: Number(e.target.value) })}
+              >
+                <option value={1}>Marangoz</option>
+                <option value={2}>Montajcı</option>
+                <option value={4}>Ebatlamacı</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="reg-city">Şehir</label>
+              <input
+                id="reg-city"
                 className="form-input"
                 type="text"
-                placeholder="Kullanıcı adınız"
-                value={registerData.userName}
-                onChange={(e) => setRegisterData({ ...registerData, userName: e.target.value })}
-                required
+                placeholder="Örn: İstanbul"
+                list="turkey-cities-reg"
+                value={registerData.city}
+                onChange={(e) => setRegisterData({ ...registerData, city: e.target.value })}
               />
+              <datalist id="turkey-cities-reg">
+                {TURKEY_CITIES.map((city) => (
+                  <option key={city} value={city} />
+                ))}
+              </datalist>
             </div>
             <div className="form-group">
               <label className="form-label" htmlFor="reg-password">Şifre</label>
@@ -168,14 +225,15 @@ export default function Login() {
               />
             </div>
             <div className="form-group">
-              <label className="form-label" htmlFor="reg-city">Şehir</label>
+              <label className="form-label" htmlFor="reg-password-confirm">Şifre Tekrar</label>
               <input
-                id="reg-city"
+                id="reg-password-confirm"
                 className="form-input"
-                type="text"
-                placeholder="İstanbul"
-                value={registerData.city}
-                onChange={(e) => setRegisterData({ ...registerData, city: e.target.value })}
+                type="password"
+                placeholder="••••••••"
+                value={registerData.passwordConfirm}
+                onChange={(e) => setRegisterData({ ...registerData, passwordConfirm: e.target.value })}
+                required
               />
             </div>
             <button className="login-btn" type="submit" disabled={loading}>

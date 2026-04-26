@@ -29,7 +29,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceGlue
             }
 
             var Glue = await _context.Glue.
-                FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerID && x.Weight == request.Weight && x.Brand == request.Brand);
+                FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerID && x.Id.ToString() == request.GlueId);
 
             if (Glue == null)
             {

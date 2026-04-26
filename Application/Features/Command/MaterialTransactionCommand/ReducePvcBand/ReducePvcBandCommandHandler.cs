@@ -27,7 +27,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReducePvcBand
             }
 
             var PvcBand = await _context.PvcBand.
-                FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerId && x.Color == request.Color && x.Thickness == request.Thickness && x.Brand == request.Brand);
+                FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerId && x.Id.ToString() == request.PvcBandId);
 
             if (PvcBand == null)
             {

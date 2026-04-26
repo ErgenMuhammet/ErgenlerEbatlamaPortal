@@ -12,8 +12,9 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceGlue
     {
         [JsonIgnore]
         public string? OwnerID { get; set; }
-        public int Weight { get; set; }
-        public string Brand { get; set; }
+        
+        [JsonIgnore]
+        public string? GlueId { get; set; }
 
         public int Count { get; set; }
     }

@@ -1,4 +1,4 @@
-﻿using Application.Features.Command.AccountingTransaction.AddExpense;
+using Application.Features.Command.AccountingTransaction.AddExpense;
 using Application.Features.Command.AccountingTransaction.AddIncome;
 using Application.Features.Command.AccountingTransaction.AddInvoice;
 using Application.Features.Command.AccountingTransaction.PayTheInvoice;
@@ -7,6 +7,8 @@ using Application.Features.Command.OrderTransactionCommands.DeleteOrder;
 using Application.Features.Query.AccountingTransactionQuery.GetAllExpense;
 using Application.Features.Query.AccountingTransactionQuery.GetAllIncomes;
 using Application.Features.Query.AccountingTransactionQuery.GetInvoices;
+using Application.Features.Query.AccountingTransactionQuery.GetProfitLossSituation;
+using Application.Features.Query.AccountingTransactionQuery.GetPayedInvoice;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +45,24 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("GetPayedInvoice")]
+        public async Task<IActionResult> GetPayedInvoice()
+        {
+            var request = new GetPayedInvoiceQueryRequest();
+
+            request.OwnerId = OwnerId;
+
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
 
         [HttpPost("AddInvoice")]
         public async Task<IActionResult> AddInvoice([FromBody] AddInvoiceCommandRequest request ) 
@@ -150,6 +170,23 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             var result = await _mediatR.Send(request);
 
             if (!result.IsSucces)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("GetProfitLossSituation")]
+        public async Task<IActionResult> GetProfitLossSituation()
+        {
+            var request = new GetProfitLossSituationQueryRequest();
+
+            request.OwnerId = OwnerId;
+
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
             {
                 return BadRequest(result);
             }
