@@ -22,7 +22,7 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetPayedInvoice
             _userManager = userManager;
             _context = context;
         }
-
+          
         public async Task<GetPayedInvoiceQueryResponse> Handle(GetPayedInvoiceQueryRequest request, CancellationToken cancellationToken)
         {
             var Owner = await _userManager.FindByIdAsync(request.OwnerId);
