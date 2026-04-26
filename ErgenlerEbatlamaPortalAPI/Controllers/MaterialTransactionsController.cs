@@ -219,6 +219,7 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
         public async Task<IActionResult> UpdateBackPanel([FromBody] UpdateBackPanelCommandRequest request, [FromRoute] string BackPanelId)
         {
             request.OwnerId = OwnerId;
+
             request.BackPanelId = BackPanelId;
 
             var result = await _mediatR.Send(request);
@@ -263,7 +264,7 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("Update/PvcBand/{ScrapId}")]
+        [HttpPut("Update/PvcBand/{PvcBandId}")]
         public async Task<IActionResult> UpdatePvcBand([FromBody] UpdatePvcBandCommandRequest request, [FromRoute] string PvcBandId)
         {
             request.OwnerId = OwnerId;

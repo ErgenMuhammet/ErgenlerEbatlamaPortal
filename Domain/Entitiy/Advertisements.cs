@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.GlobalEnum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,11 +13,14 @@ namespace Domain.Entitiy
         public DateTime AdvertisementDate { get; set;} = DateTime.Now.Date;
         public string Title { get; set; } 
         public string AdvertisementAddress { get; set; }
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
+        public decimal? Latitude { get; set; }
+        public decimal? Longitude { get; set; }
         public AppUser? Owner { get; set; }
         public string OwnerId { get; set; }
         public string ImgUrl { get; set; }
         public bool? IsActive { get; set; } = true;
+        public string? Bidder { get; set; }
+        public Category TargetCategory { get; set; } = Category.Assembler | Category.Carpenter;
+        public Category WhoCanShare { get; set; } = Category.Carpenter;
     }
 }

@@ -13,7 +13,7 @@ namespace Domain.Entitiy
         public float TotalLoss { get; set; }
         public DateTime? Date  { get; set; }
         public AppUser? Owner { get; set; }
-        public string? OwnerId { get; set; }
+        public string OwnerId { get; set; }
         public float? LastSituation { get; set; }
 
         public float GetLastSituation()

@@ -20,7 +20,8 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdateMdf
 
         public async Task<UpdateMdfCommandResponse> Handle(UpdateMdfCommandRequest request, CancellationToken cancellationToken)
         {
-            var mdf = await _context.Mdf.FirstOrDefaultAsync(x => x.Id.ToString() == request.MdfId);
+            var mdf = await _context.Mdf.FirstOrDefaultAsync(x => x.Id.ToString() == request.MdfId.ToString());
+
             if (mdf == null)
             {
                 return new UpdateMdfCommandResponse
@@ -41,7 +42,8 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdateMdf
 
             var IsContain = await _context.Mdf.FirstOrDefaultAsync
                 (
-                    x => x.Brand == request.Brand &&
+                    x => x.Id.ToString() != request.MdfId &&
+                    x.Brand == request.Brand &&
                     x.Color == request.Color &&
                     x.OwnerID == request.OwnerId &&
                     x.Thickness == request.Thickness 
@@ -54,6 +56,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdateMdf
                     mdf.Color = request.Color;
                     mdf.Stock = request.Stock;
                     mdf.Thickness = request.Thickness;
+                    mdf.Weight = request.Weight;
 
                     await _context.SaveChangesAsync(cancellationToken);
                     return new UpdateMdfCommandResponse
@@ -66,6 +69,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdateMdf
                 {
                     
                     IsContain.Stock += request.Stock;
+
                     _context.Mdf.Remove(mdf);
                     await _context.SaveChangesAsync(cancellationToken);
                     return new UpdateMdfCommandResponse

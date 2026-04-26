@@ -35,6 +35,7 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetInvoices
 
             List<InvoiceDto> Invoices = await _context.Invoice.Where(x => x.OwnerId == Owner.Id).Select(m => new InvoiceDto
             {
+                Id = m.Id.ToString(),
                 LastPaymentDate = m.LastPaymentDate,
                 Name = m.InvoiceName,
                 InvoicesNo = m.InvoiceNo,

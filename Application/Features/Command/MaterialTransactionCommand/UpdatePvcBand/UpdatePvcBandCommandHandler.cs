@@ -34,7 +34,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdatePvcBand
             }
             var Pvcband = await _context.PvcBand.FirstOrDefaultAsync(x => x.Id.ToString() == request.PvcBandId);
 
-            if (Pvcband.OwnerID == request.OwnerId)
+            if (Pvcband.OwnerID.ToString() != request.OwnerId)
             {
                 return new UpdatePvcBandCommandResponse
                 {
@@ -45,7 +45,8 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdatePvcBand
 
             var IsContain = await _context.PvcBand.FirstOrDefaultAsync
                 (
-                    x => x.Brand == request.Brand && 
+                    x => x.Id.ToString() != request.PvcBandId &&
+                    x.Brand == request.Brand && 
                     x.OwnerID == request.OwnerId &&
                     x.Thickness == request.Thickness && 
                     x.Color == request.Color
@@ -55,16 +56,16 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdatePvcBand
             {
                 if (IsContain == null)
                 {
-                    IsContain.Brand = request.Brand;
-                    IsContain.Color = request.Color;
-                    IsContain.Stock = request.Stock;
-                    IsContain.Thickness = request.Thickness;
+                    Pvcband.Brand = request.Brand;
+                    Pvcband.Color = request.Color;
+                    Pvcband.Stock = request.Stock;
+                    Pvcband.Thickness = request.Thickness;
 
                     await _context.SaveChangesAsync(cancellationToken);
 
                     return new UpdatePvcBandCommandResponse
                     {
-                        IsSuccess = false,
+                        IsSuccess = true,
                         Message = "İlgili ürün güncellendi"
                     };
                 }
@@ -78,7 +79,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdatePvcBand
 
                     return new UpdatePvcBandCommandResponse
                     {
-                        IsSuccess = false,
+                        IsSuccess = true,
                         Message = "İlgili ürün mevcut olduğundan stok bilgisi güncellendi"
                     };
                 }

@@ -47,7 +47,6 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddMdf
                 if (material != null)
                 {
                     material.Stock += request.Stock;
-                    material.Cost = request.Cost;
 
                     await _context.SaveChangesAsync(cancellationToken);
 
@@ -64,12 +63,10 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddMdf
                     {
                         Brand = request.Brand,
                         Color = request.Color,
-                        Cost = request.Cost,
                         Stock = request.Stock,
                         Thickness = request.Thickness,
                         Weight = request.Weight,
                         OwnerID = request.OwnerId,
-                        Price = request.Price,
                     };
                     await _context.Mdf.AddAsync(mdf);
                     await _context.SaveChangesAsync(cancellationToken);

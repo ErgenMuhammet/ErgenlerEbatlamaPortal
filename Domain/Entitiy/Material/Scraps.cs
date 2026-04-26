@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace Domain.Entitiy.Material
         public float Width { get; set; }
         public float Height { get; set; }
         public string? MaterialType { get; set; }
+        public int? count { get; set; }
 
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Application.Interface;
 using Domain.Entitiy;
-using Domain.Entitiy.Jobs;
 using Domain.Entitiy.Material;
 using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 using Microsoft.AspNetCore.Identity;
@@ -33,6 +32,7 @@ namespace Persistence.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<Advertisements> Advertisements { get; set; }
         public DbSet<ChatMessage> Messages { get; set; }
+        
 
         public IdentityContext(DbContextOptions<IdentityContext> options) : base(options)
         { 

@@ -54,7 +54,6 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 
 builder.Services.AddPersistenceService(builder.Configuration);
@@ -73,39 +72,18 @@ builder.Services.AddCors(options =>
     });
 });
 
-    
-
 var app = builder.Build();
+
+app.UseRouting();
+
+app.UseCors("AllowFrontend");
+
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-using (var scope = app.Services.CreateScope()) 
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<IAppContext>();
-        var userManager = services.GetRequiredService<UserManager<AppUser>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        var serviceProvider = services.GetRequiredService<IServiceProvider>();
-
-        var AppUserSeedData = new Persistence.Context.AppUserSeedData(userManager, roleManager);
-        await AppUserSeedData.InitializeAsync(serviceProvider);
-      
-
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Seed Data yüklenirken bir hata oluþtu!");
-    }
-}
-
-app.UseCors("AllowFrontend"); 
 
 app.UseAuthentication(); //Bu kim kontrol et
 app.UseAuthorization(); //Girebilir mi

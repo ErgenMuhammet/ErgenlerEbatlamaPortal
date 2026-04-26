@@ -35,6 +35,7 @@ namespace Application.Features.Query.GetMaterialQuery.GlueStock
 
             List<GlueDto> Glues = await _Context.Glue.Where(x => x.OwnerID == Owner.Id).Select(m => new GlueDto
             {
+                Id = m.Id.ToString(),   
                 Brand = m.Brand,
                 Weight = m.Weight,
                 Stock = m.Stock,

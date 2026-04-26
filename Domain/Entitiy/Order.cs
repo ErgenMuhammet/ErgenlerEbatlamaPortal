@@ -17,7 +17,7 @@ namespace Domain.Entitiy
         public DateTime OrderDate { get; set; } = DateTime.Now.Date;
         public AppUser? Owner { get; set; }
         public string OwnerId { get; set; }
-        public bool IsDone { get; set; }
+        public bool? IsDone { get; set; } = false;
 
     }
 }

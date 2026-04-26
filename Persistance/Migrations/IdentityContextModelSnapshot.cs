@@ -36,8 +36,8 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("AdvertisementDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Bidder")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImgUrl")
                         .IsRequired()
@@ -46,23 +46,27 @@ namespace Persistence.Migrations
                     b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("Latitude")
+                    b.Property<decimal?>("Latitude")
                         .HasColumnType("decimal(10 , 8)");
 
-                    b.Property<decimal>("Longitude")
+                    b.Property<decimal?>("Longitude")
                         .HasColumnType("decimal(11 , 8)");
 
                     b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("TargetCategory")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("AdvertisementId");
+                    b.Property<int>("WhoCanShare")
+                        .HasColumnType("int");
 
-                    b.HasIndex("AppUserId");
+                    b.HasKey("AdvertisementId");
 
                     b.HasIndex("OwnerId");
 
@@ -167,9 +171,48 @@ namespace Persistence.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("SituationId");
-
                     b.ToTable("AppUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entitiy.BaseJobs", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AdressDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Category")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Experience")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MastersName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("WorkShopName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("Domain.Entitiy.ChatMessage", b =>
@@ -218,10 +261,8 @@ namespace Persistence.Migrations
                     b.Property<float>("Amount")
                         .HasColumnType("real");
 
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ExpenseDate")
@@ -232,8 +273,6 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.HasIndex("OwnerId");
 
@@ -249,10 +288,8 @@ namespace Persistence.Migrations
                     b.Property<float>("Amount")
                         .HasColumnType("real");
 
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("IncomeDate")
@@ -263,8 +300,6 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.HasIndex("OwnerId");
 
@@ -282,8 +317,8 @@ namespace Persistence.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
 
                     b.Property<string>("InvoiceName")
                         .IsRequired()
@@ -294,8 +329,7 @@ namespace Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime?>("LastPaymentDate")
-                        .IsRequired()
+                    b.Property<DateTime>("LastPaymentDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OwnerId")
@@ -310,48 +344,6 @@ namespace Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Invoices", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entitiy.Jobs.BaseJobs", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AdressDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("BaseJobs")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Category")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Experience")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MastersName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("WorkShopName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
-
-                    b.ToTable("Jobs", (string)null);
-
-                    b.HasDiscriminator<int>("BaseJobs").HasValue(0);
                 });
 
             modelBuilder.Entity("Domain.Entitiy.Material.BackPanel", b =>
@@ -411,7 +403,9 @@ namespace Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Brand")
-                        .HasColumnType("nvarchar(450)")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("Brand");
 
                     b.Property<float>("Cost")
@@ -430,7 +424,9 @@ namespace Persistence.Migrations
                         .HasColumnType("real");
 
                     b.Property<int>("Stock")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
+                        .HasDefaultValue(0)
                         .HasColumnName("Stock");
 
                     b.Property<float>("Weight")
@@ -443,7 +439,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("Brand", "Weight", "OwnerID")
                         .IsUnique()
-                        .HasFilter("[Brand] IS NOT NULL AND [OwnerID] IS NOT NULL");
+                        .HasFilter("[OwnerID] IS NOT NULL");
 
                     b.ToTable("Glues", (string)null);
                 });
@@ -455,14 +451,14 @@ namespace Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Brand")
+                        .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("Brand");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Color")
+                        .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("Color");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<float>("Cost")
                         .HasColumnType("real");
@@ -480,13 +476,12 @@ namespace Persistence.Migrations
                         .HasColumnType("real");
 
                     b.Property<int>("Stock")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("Stock");
+                        .HasDefaultValue(0);
 
                     b.Property<float>("Thickness")
-                        .HasMaxLength(200)
-                        .HasColumnType("real")
-                        .HasColumnName("Thickness");
+                        .HasColumnType("real");
 
                     b.Property<int>("Weight")
                         .HasColumnType("int");
@@ -509,10 +504,13 @@ namespace Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Brand")
-                        .HasColumnType("nvarchar(450)")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("Brand");
 
                     b.Property<string>("Color")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -535,7 +533,9 @@ namespace Persistence.Migrations
                         .HasColumnType("real");
 
                     b.Property<int>("Stock")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
+                        .HasDefaultValue(0)
                         .HasColumnName("Stock");
 
                     b.Property<float>("Thickness")
@@ -548,7 +548,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("Brand", "Color", "Thickness", "OwnerID")
                         .IsUnique()
-                        .HasFilter("[Brand] IS NOT NULL AND [Color] IS NOT NULL AND [OwnerID] IS NOT NULL");
+                        .HasFilter("[OwnerID] IS NOT NULL");
 
                     b.ToTable("PvcBands", (string)null);
                 });
@@ -563,6 +563,7 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Color")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -598,11 +599,14 @@ namespace Persistence.Migrations
                     b.Property<float>("Width")
                         .HasColumnType("real");
 
+                    b.Property<int?>("count")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerID");
 
-                    b.HasIndex("Color", "Thickness", "OwnerID")
+                    b.HasIndex("Color", "Thickness", "OwnerID", "Width", "Height")
                         .IsUnique()
                         .HasFilter("[Color] IS NOT NULL AND [OwnerID] IS NOT NULL");
 
@@ -615,9 +619,6 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<float?>("CostOfOrder")
                         .HasColumnType("real");
 
@@ -627,7 +628,7 @@ namespace Persistence.Migrations
                     b.Property<int?>("CountOfMdf")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsDone")
+                    b.Property<bool?>("IsDone")
                         .HasColumnType("bit");
 
                     b.Property<float?>("MetreOfPvcBand")
@@ -645,8 +646,6 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.HasIndex("OwnerId");
 
@@ -822,12 +821,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entitiy.Advertisements", b =>
                 {
-                    b.HasOne("Domain.Entitiy.AppUser", null)
-                        .WithMany("Advertisements")
-                        .HasForeignKey("AppUserId");
-
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
-                        .WithMany()
+                        .WithMany("Advertisements")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -835,13 +830,15 @@ namespace Persistence.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Domain.Entitiy.AppUser", b =>
+            modelBuilder.Entity("Domain.Entitiy.BaseJobs", b =>
                 {
-                    b.HasOne("Domain.Entitiy.ProfitLossSituation", "Situation")
-                        .WithMany()
-                        .HasForeignKey("SituationId");
+                    b.HasOne("Domain.Entitiy.AppUser", "User")
+                        .WithOne("Jobs")
+                        .HasForeignKey("Domain.Entitiy.BaseJobs", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Situation");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entitiy.ChatMessage", b =>
@@ -865,12 +862,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entitiy.Expense", b =>
                 {
-                    b.HasOne("Domain.Entitiy.AppUser", null)
-                        .WithMany("Expense")
-                        .HasForeignKey("AppUserId");
-
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
-                        .WithMany()
+                        .WithMany("Expense")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -880,12 +873,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entitiy.Income", b =>
                 {
-                    b.HasOne("Domain.Entitiy.AppUser", null)
-                        .WithMany("Income")
-                        .HasForeignKey("AppUserId");
-
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
-                        .WithMany()
+                        .WithMany("Income")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -902,16 +891,6 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("Domain.Entitiy.Jobs.BaseJobs", b =>
-                {
-                    b.HasOne("Domain.Entitiy.AppUser", "User")
-                        .WithOne("Jobs")
-                        .HasForeignKey("Domain.Entitiy.Jobs.BaseJobs", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entitiy.Material.BackPanel", b =>
@@ -966,12 +945,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entitiy.Order", b =>
                 {
-                    b.HasOne("Domain.Entitiy.AppUser", null)
-                        .WithMany("Orders")
-                        .HasForeignKey("AppUserId");
-
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -982,7 +957,7 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Entitiy.ProfitLossSituation", b =>
                 {
                     b.HasOne("Domain.Entitiy.AppUser", "Owner")
-                        .WithMany()
+                        .WithMany("Situation")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1064,6 +1039,8 @@ namespace Persistence.Migrations
                     b.Navigation("PvcBand");
 
                     b.Navigation("Scraps");
+
+                    b.Navigation("Situation");
                 });
 #pragma warning restore 612, 618
         }

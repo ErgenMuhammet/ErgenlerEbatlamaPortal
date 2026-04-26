@@ -10,13 +10,12 @@ public class GlueConfiguration : IEntityTypeConfiguration<Glue>
 
         builder.HasKey(x => x.Id);
 
-        // Ağırlık ve Markaya göre stok benzersizliği
 
         builder.HasIndex(x => new { x.Brand, x.Weight ,x.OwnerID}).IsUnique();
 
-        builder.Property(x => x.Brand).HasColumnName("Brand");
-        builder.Property(x => x.Weight).HasColumnName("Weight");
-        builder.Property(x => x.Stock).HasColumnName("Stock");
+        builder.Property(x => x.Brand).HasColumnName("Brand").IsRequired().HasMaxLength(50);
+        builder.Property(x => x.Weight).HasColumnName("Weight").IsRequired();
+        builder.Property(x => x.Stock).HasColumnName("Stock").HasDefaultValue(0);
 
         builder.HasOne(x => x.Owner).
             WithMany(u => u.Glue).

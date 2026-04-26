@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Resend;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,15 @@ namespace Infrastructure.Services
                     ClockSkew = TimeSpan.Zero
                 };
             });
+
+            services.AddOptions();
+            services.AddHttpClient<ResendClient>();
+            services.Configure<ResendClientOptions>(o =>
+            {
+                o.ApiToken = configuration["ResendEmail:ApiKey"];
+            });
+            services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<IResend, ResendClient>(); // 
 
             services.AddAuthorization();
 

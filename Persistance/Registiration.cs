@@ -1,18 +1,18 @@
 ﻿using Application.Interface;
 using Domain.Entitiy;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Persistence.Context;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure
 {
@@ -32,7 +32,9 @@ namespace Infrastructure
 
             services.AddScoped<IAppContext>(x => x.GetRequiredService<IdentityContext>());
 
-          
+            var modelBuilder = new ModelBuilder();
+
+
         }
         
 

@@ -43,8 +43,9 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddScrap
                 OwnerID = request.OwnerId,
                 Thickness = request.Thickness,
                 Weight = request.Weight,
-                Width = request.Width,       
+                Width = request.Width,
                 MaterialType = request.MaterialType,
+                count = request.count,
             };
 
             try

@@ -12,6 +12,7 @@ namespace Application.Features.Command.AdvertisementTransactionHandlers.DeleteAd
     {
         [JsonIgnore]
         public string? OwnerId { get; set; }
+
         [JsonIgnore]
         public string? AdvertisementId{ get; set; }
     }

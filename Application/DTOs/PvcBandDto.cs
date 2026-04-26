@@ -8,6 +8,7 @@ namespace Application.DTOs
 {
     public class PvcBandDto
     {
+        public string Id { get; set; }
         public string? Brand { get; set; }
         public float Thickness { get; set; }
         public string? Color { get; set; }

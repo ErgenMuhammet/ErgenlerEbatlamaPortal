@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//DENEME@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 namespace Application.Features.Query.GetMaterialQuery.BackPanelStock
 {
     public class GetBackPanelStockQueryHandler : IRequestHandler<GetBackPanelStockQueryRequest, GetBackPanelStockQueryResponse>
@@ -42,6 +41,7 @@ namespace Application.Features.Query.GetMaterialQuery.BackPanelStock
                 Brand = m.Brand,
                 Thickness = m.Thickness,
                 Stock = m.Stock,
+                BackPanelId = m.Id.ToString(),
 
 
             }).AsNoTracking().ToListAsync();

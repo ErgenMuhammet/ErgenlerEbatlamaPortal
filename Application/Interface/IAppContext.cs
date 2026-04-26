@@ -1,5 +1,4 @@
 ﻿using Domain.Entitiy;
-using Domain.Entitiy.Jobs;
 using Domain.Entitiy.Material;
 using Microsoft.EntityFrameworkCore;
 using System;

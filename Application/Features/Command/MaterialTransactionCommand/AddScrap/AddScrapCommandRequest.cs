@@ -19,6 +19,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddScrap
         public float Height { get; set; }       
         public string? Brand { get; set; }
         public string? MaterialType { get; set; }
+        public int? count { get; set; }
 
     }
 }

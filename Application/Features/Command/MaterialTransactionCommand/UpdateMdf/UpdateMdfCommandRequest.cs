@@ -20,8 +20,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdateMdf
         public string? Color { get; set; }
         public string? Brand { get; set; }
         public int Stock { get; set; }
-        public float Weight { get; set; }
-        public float Cost { get; set; }
-        public float Price { get; set; }
+        public int Weight { get; set; }
+     
     }
 }

@@ -10,11 +10,11 @@ public class PvcBandConfiguration : IEntityTypeConfiguration<PvcBand>
 
         builder.HasIndex(x => new { x.Brand, x.Color, x.Thickness , x.OwnerID }).IsUnique();
 
-        builder.Property(x => x.Brand).HasColumnName("Brand");
-        builder.Property(x => x.Color).HasMaxLength(50);
-        builder.Property(x => x.Thickness).HasColumnName("Thickness");
-        builder.Property(x => x.Stock).HasColumnName("Stock");
-        
+        builder.Property(x => x.Brand).HasColumnName("Brand").IsRequired().HasMaxLength(50); 
+        builder.Property(x => x.Color).IsRequired().HasMaxLength(50);
+        builder.Property(x => x.Thickness).HasColumnName("Thickness").IsRequired();
+        builder.Property(x => x.Stock).HasColumnName("Stock").HasDefaultValue(0);
+
         builder.HasOne(x =>  x.Owner).
             WithMany(u => u.PvcBand).
             HasForeignKey(x => x.OwnerID).

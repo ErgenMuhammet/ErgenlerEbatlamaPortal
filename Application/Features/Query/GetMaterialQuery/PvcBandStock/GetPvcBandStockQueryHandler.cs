@@ -42,7 +42,7 @@ namespace Application.Features.Query.GetMaterialQuery.PvcBandStock
                 Brand = m.Brand,
                 Thickness = m.Thickness,
                 Stock = m.Stock,
-
+                Id = m.Id.ToString(),
 
             }).AsNoTracking().ToListAsync();
 

@@ -16,7 +16,7 @@ namespace Application.Features.Command.AccountingTransaction.AddInvoice
         public string? InvoiceName { get; set; }
         public string? InvoiceNo { get; set; }
         public float Cost { get; set; }
-        public DateTime? LastPaymentDate { get; set; }
+        public DateTime LastPaymentDate { get; set; }
         
         
     }

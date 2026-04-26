@@ -1,5 +1,6 @@
 ﻿using Application.Features.Command.AdvertisementTransactionHandlers.AddAdvertisement;
 using Application.Features.Command.AdvertisementTransactionHandlers.DeleteAdvertisement;
+using Application.Features.Command.AdvertisementTransactionHandlers.OfferToAdvertisement;
 using Application.Features.Command.AdvertisementTransactionHandlers.UpdateAdvertisement;
 using Application.Features.Query.GetAdvertisement;
 using Application.Features.Query.GetAllAdvertisementQuery;
@@ -13,7 +14,7 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("/portal")]
+    [Route("portal/")]
     public class AdvertisementController : ControllerBase
     {
        protected string UserId => User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier)!;
@@ -26,10 +27,10 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
         }
 
         [HttpPatch("UpdateAdvertisement")]
-        public async Task<IActionResult> UpdateAdvs([FromBody] UpdateAdvertisementCommandRequest request)
+        public async Task<IActionResult> UpdateAdvs([FromBody] UpdateAdvertisementCommandRequest request , string AdvertisementId)
         {
             request.OwnerId = UserId;   
-
+            request.AdvertisementId = AdvertisementId;
             var result = await _mediatR.Send(request);
 
             if (!result.IsSucces)
@@ -40,10 +41,14 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("DeleteAdvertisement")]
-        public async Task<IActionResult> DeleteAdvs()
+        [HttpDelete("DeleteAdvertisement/{id}")]
+        public async Task<IActionResult> DeleteAdvs([FromRoute] string id)
         {
-            var request = new DeleteAdvertismentCommandRequest();          
+            var request = new DeleteAdvertismentCommandRequest();
+
+            request.AdvertisementId = id;
+
+            request.OwnerId = UserId;
 
             var result = await _mediatR.Send(request);
 
@@ -55,9 +60,13 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("GetAdvertisement/{id}")]
-        public async Task<IActionResult> GetAdvs([FromRoute] GetAdvertisementQueryRequest request) 
+        [HttpGet("GetAdvertisement/{id}")]
+        public async Task<IActionResult> GetAdvs([FromRoute] string id ) 
         {
+            var request = new GetAdvertisementQueryRequest();
+
+            request.AdvertismentId = id ;
+
             var result = await _mediatR.Send(request);
 
             if (!result.IsSucces)
@@ -72,6 +81,8 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
         public async Task<IActionResult> GetAllAdvs()
         {
             var request = new GetAllAdvertisementQueryRequest();
+
+            request.UserId = UserId;
 
             var result = await _mediatR.Send(request);
 
@@ -88,7 +99,7 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
         {
             var request = new GetMyPastAdvertisementQueryRequest();
 
-            request.OwnerId = request.OwnerId;
+            request.OwnerId = UserId;
 
             var result = await _mediatR.Send(request);
 
@@ -103,6 +114,21 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
         [HttpPost("AddAdvertisement")]
         public async Task<IActionResult> AddAdvs([FromBody] AddAdvertisementsCommandRequest request)
         {
+            request.OwnerId = UserId;
+
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSucces)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPut("OfferToAdvertisement")]
+        public async Task<IActionResult> OfferToAdvertisement([FromRoute] OfferToAdvertisementCommandRequest request)
+        {
             request.OwnerId = request.OwnerId;
 
             var result = await _mediatR.Send(request);
@@ -113,6 +139,7 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             }
 
             return Ok(result);
+
         }
     }
 }

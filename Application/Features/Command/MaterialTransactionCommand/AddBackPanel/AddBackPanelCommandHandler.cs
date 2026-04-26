@@ -48,10 +48,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddBackPanel
                     {
                         Brand = request.Brand,
                         Color = request.Color,
-                        Cost = request.Cost,
-                        OwnerID = request.OwnerId,
-                        Price = request.Price,
-                        Profit = request.Profit,
+                        OwnerID = request.OwnerId,                      
                         Stock = request.Stock,
                         Thickness = request.Thickness,
                     };
@@ -67,10 +64,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddBackPanel
                 }
                 else
                 {
-
-
                     Material.Stock += request.Stock;
-                    Material.Cost = request.Cost;
                     await _context.SaveChangesAsync(cancellationToken);
 
                     return new AddBackPanelCommandResponse
@@ -78,7 +72,6 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddBackPanel
                         IsSucces = true,
                         Message = "Arkalık stoğu başarıyla güncellendi",
                     };
-
                 }
             }
             catch (Exception ex)

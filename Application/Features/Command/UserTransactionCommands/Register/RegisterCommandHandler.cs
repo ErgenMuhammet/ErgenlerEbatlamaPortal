@@ -1,6 +1,5 @@
 ﻿using Application.Interface;
 using Domain.Entitiy;
-using Domain.Entitiy.Jobs;
 using Domain.GlobalEnum;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -29,6 +28,11 @@ namespace Application.Features.Command.UserTransaction.Register
 
         public async Task<RegisterCommandResponse> Handle(RegisterCommandRequest request, CancellationToken cancellationToken)
         {
+            if (request == null)
+            {
+                throw new ArgumentNullException("İstek sınıfı boş parametreler dönderdi");
+            }
+
             if (request.Password != request.PasswordConfirm)
             {
                 return new RegisterCommandResponse
@@ -102,13 +106,24 @@ namespace Application.Features.Command.UserTransaction.Register
 
             var EncodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
-            string baseUrl = "http://localhost:5233";
+            string baseUrl = "http://localhost:5293";
 
             var confirmationLink = $"{baseUrl}/Portal/ConfirmEmail?userId={user.Id}&token={EncodedToken}";
 
+            string htmlBody = $@"
+            <div style=""font-family: sans-serif; background-color: #f4f4f7; padding: 20px;"">
+                <div style=""max-width: 500px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px;"">
+                    <h2>Hesabını Onayla</h2>
+                    <p>Merhaba, kaydını tamamlamak için aşağıdaki butona tıkla:</p>
+                    <a href=""{confirmationLink}"" style=""background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;"">
+                        E-postayı Doğrula
+                    </a>
+                </div>
+            </div>";
+
             try
             {
-                await _emailService.SendEmail(user.Email, "Hesap Doğrulama Linki", confirmationLink);
+                await _emailService.SendEmail(user.Email, "Hesap Doğrulama Linki", htmlBody);
             }
             catch (Exception ex)
             {

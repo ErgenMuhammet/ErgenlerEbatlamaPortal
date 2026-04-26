@@ -1,9 +1,9 @@
-﻿using Domain.Entitiy.Jobs;
-using Domain.Entitiy.Material;
+﻿using Domain.Entitiy.Material;
 using Domain.GlobalEnum;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +15,10 @@ namespace Domain.Entitiy
         
         public string? FullName { get; set; }
         public string? PhotoUrl { get; set; }
-        public DateTime? BirthDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime? BirthDate { get; set; } 
         public DateTime CreatedDate { get; set; } = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
         public bool IsDeleted { get; set; } = false;
         public string? City { get; set; }
@@ -32,7 +35,8 @@ namespace Domain.Entitiy
         public ICollection<Invoice>? Invoice { get; set; } = new List<Invoice>();
         public ICollection<Expense>? Expense { get; set; }
         public ICollection<Income>?  Income { get; set; }
-        public ProfitLossSituation? Situation { get; set; }
+        public Guid? SituationId { get; set; } 
+        public List<ProfitLossSituation>? Situation { get; set; }
         public ICollection<Order>? Orders { get; set; }
         public ICollection<Advertisements>? Advertisements{ get; set; }
 

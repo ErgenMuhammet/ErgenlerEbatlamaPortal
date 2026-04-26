@@ -8,6 +8,7 @@ namespace Application.DTOs
 {
     public class ScrapsDto
     {
+
         public float Width { get; set; }    
         public float Height { get; set; }
         public string? Color { get; set; }

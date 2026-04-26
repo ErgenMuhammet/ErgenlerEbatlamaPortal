@@ -16,8 +16,8 @@ namespace Application.Features.Command.AdvertisementTransactionHandlers.AddAdver
 
         public string Title { get; set; }
         public string AdvertisementAddress { get; set; }
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }     
+        public decimal? Latitude { get; set; }
+        public decimal? Longitude { get; set; }     
         public string ImgUrl { get; set; }
     }
 }

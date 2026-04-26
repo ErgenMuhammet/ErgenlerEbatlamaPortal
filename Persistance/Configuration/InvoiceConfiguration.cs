@@ -20,11 +20,10 @@ namespace Persistence.Configuration
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.InvoiceNo).HasMaxLength(100).IsRequired();
-            builder.Property(x => x.Cost).HasColumnType("decimal(18,2)").IsRequired();
+            builder.Property(x => x.Cost).IsRequired();
             builder.Property(x => x.LastPaymentDate).IsRequired();
             builder.Property(x => x.InvoiceName).IsRequired();
             builder.Property(x => x.BeenPaid).HasDefaultValue(false);
-
 
             builder.
                 HasOne(a => a.Owner).

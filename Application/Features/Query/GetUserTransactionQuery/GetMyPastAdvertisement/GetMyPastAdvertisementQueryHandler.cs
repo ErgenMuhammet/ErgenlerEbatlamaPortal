@@ -25,16 +25,17 @@ namespace Application.Features.Query.GetUserTransactionQuery.GetMyPastAdvertisem
 
             try
             {
-                advs = await _context.Advertisements.Where(x => x.OwnerId.ToString() == request.OwnerId ).
+                advs = await _context.Advertisements.Where(x => x.OwnerId.ToString() == request.OwnerId).
                     Select(z => new AdvertisementDto
                     {
+                        Id = z.AdvertisementId.ToString(),
                         OwnerId = z.OwnerId,
                         AdvertisementAddress = z.AdvertisementAddress,
                         AdvertisementDate = z.AdvertisementDate,
                         ImgUrl = z.ImgUrl,
                         Latitude = z.Latitude,
                         Longitude = z.Longitude,
-                        Title = z.Title ,
+                        Title = z.Title,
                         IsActive = z.IsActive
                     }).ToListAsync(cancellationToken);
             }

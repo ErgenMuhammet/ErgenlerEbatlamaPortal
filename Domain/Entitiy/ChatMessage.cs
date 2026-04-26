@@ -9,7 +9,7 @@ namespace Domain.Entitiy
 {
     public class ChatMessage
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Content { get; set; }
         public DateTime SendAt { get; set; } = DateTime.Parse(DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
         public bool IsRead { get; set; } = false;

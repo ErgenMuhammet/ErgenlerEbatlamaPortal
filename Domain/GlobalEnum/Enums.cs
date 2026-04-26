@@ -4,35 +4,17 @@ using System.ComponentModel;
 
 namespace Domain.GlobalEnum
 {
+    [Flags]
    public enum Category
         {
             [Description("Marangoz")]
-            Carpenter = 0,
+            Carpenter = 1,
 
             [Description("Montajcı")]
-            Assembler = 1,
+            Assembler = 2,
 
             [Description("Ebatlamacı")]
-            PanelSawyer = 2,
-
-            //[Description("Glue")]
-            //Glue = 3,
-
-            //[Description("Scraps")]
-            //Scraps = 4,
-
-            //[Description("Customer")]
-            //Customer = 5,
-
-            //[Description("Invoice")]
-            //Invoice = 6,
-
-            //[Description("Payments")]
-            //Payments = 7,
-
-            //[Description("Collections")]
-            //Collections = 8,
-
+            PanelSawyer = 4
         }
    }
 

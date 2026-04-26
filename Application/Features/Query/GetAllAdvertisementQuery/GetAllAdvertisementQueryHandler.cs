@@ -1,6 +1,8 @@
 ﻿using Application.DTOs;
 using Application.Interface;
+using Domain.Entitiy;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,21 +16,25 @@ namespace Application.Features.Query.GetAllAdvertisementQuery
     public class GetAllAdvertisementQueryHandler : IRequestHandler<GetAllAdvertisementQueryRequest, GetAllAdvertisementQueryResponse>
     {
         private readonly IAppContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public GetAllAdvertisementQueryHandler(IAppContext context)
+        public GetAllAdvertisementQueryHandler(IAppContext context , UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<GetAllAdvertisementQueryResponse> Handle(GetAllAdvertisementQueryRequest request, CancellationToken cancellationToken)
         {
+            var User = await _userManager.FindByIdAsync(request.UserId);
             var advs = new List<AdvertisementDto>();
 
             try
             {
-                advs = await _context.Advertisements.
+                advs = await _context.Advertisements.Where(z => (z.TargetCategory & User.UserCategory) != 0 && z.IsActive == true).
                 Select(x => new AdvertisementDto
                 {
+                    Id = x.AdvertisementId.ToString(),
                     AdvertisementAddress = x.AdvertisementAddress,
                     AdvertisementDate = x.AdvertisementDate,
                     ImgUrl = x.ImgUrl,

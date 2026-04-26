@@ -23,7 +23,7 @@ namespace Persistence.Configuration
             builder.Property(x => x.Date).IsRequired();
 
             builder.HasOne(x => x.Owner).
-                WithMany().
+                WithMany(u => u.Situation).
                 HasForeignKey(x => x.OwnerId).
                 OnDelete(DeleteBehavior.Cascade);
 

@@ -39,6 +39,7 @@ namespace Application.Features.Query.GetMaterialQuery.MdfStock
 
             List<MdfDto> Mdfs = await _Context.Mdf.Where(x => x.OwnerID == Owner.Id).Select(m => new MdfDto
             {
+                Id = m.Id.ToString(),
                 Brand = m.Brand,
                 Color = m.Color,
                 Stock = m.Stock,

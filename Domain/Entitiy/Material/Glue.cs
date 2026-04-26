@@ -13,6 +13,5 @@ namespace Domain.Entitiy.Material
 
       
 
-        public float GetProfit() => Price - Cost;
     }
 }

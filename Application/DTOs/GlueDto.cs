@@ -8,6 +8,7 @@ namespace Application.DTOs
 {
     public class GlueDto
     {
+        public string Id { get; set; }
         public string? Brand { get; set; }
         public float Weight { get; set; }
         public int Stock { get; set; }

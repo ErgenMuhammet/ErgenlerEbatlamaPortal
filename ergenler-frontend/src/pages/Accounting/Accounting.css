@@ -1,0 +1,168 @@
+/* ===== ACCOUNTING PAGE ===== */
+.accounting-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* --- Summary Cards --- */
+.accounting-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.summary-card {
+  padding: var(--space-lg);
+  background: var(--surface-100);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  text-align: center;
+  transition: all var(--transition-base);
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.summary-card-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-sm);
+}
+
+.summary-card-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.summary-card-value.income {
+  color: var(--accent-emerald);
+}
+
+.summary-card-value.expense {
+  color: var(--accent-rose);
+}
+
+.summary-card-value.net {
+  color: var(--accent-cyan);
+}
+
+/* --- Section --- */
+.accounting-section {
+  background: var(--surface-100);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.accounting-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.accounting-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.accounting-section-title .icon {
+  color: var(--primary-400);
+}
+
+/* --- Invoices --- */
+.invoice-list {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.invoice-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  background: var(--surface-200);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+}
+
+.invoice-item:hover {
+  background: var(--surface-300);
+}
+
+.invoice-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.invoice-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.invoice-no {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.invoice-amount {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent-amber);
+}
+
+.invoice-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.pay-btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--success);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.pay-btn:hover {
+  background: rgba(34, 197, 94, 0.2);
+}
+
+.paid-badge {
+  font-size: 0.75rem;
+  color: var(--success);
+  font-weight: 600;
+}
+
+/* --- Two-column Layout --- */
+.accounting-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .accounting-summary {
+    grid-template-columns: 1fr;
+  }
+  .accounting-columns {
+    grid-template-columns: 1fr;
+  }
+}

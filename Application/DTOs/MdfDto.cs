@@ -8,6 +8,7 @@ namespace Application.DTOs
 {
     public class MdfDto
     {
+        public string Id { get; set; }
         public float Thickness { get; set; }
         public string? Color { get; set; }
         public string? Brand { get; set; }

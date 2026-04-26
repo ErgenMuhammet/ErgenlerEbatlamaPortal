@@ -16,13 +16,10 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddBackPanel
 
         public string? Brand { get; set; }
         public int Stock { get; set; }
-        
-        public float Cost { get; set; }
-        public float Price { get; set; }
-
+            
         public float Thickness { get; set; }
         public string? Color { get; set; }
-        public float Profit { get; set; }
+       
 
     }
 }

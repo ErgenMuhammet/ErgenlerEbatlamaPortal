@@ -43,7 +43,8 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdateGlue
 
             var IsContain = await _context.Glue.FirstOrDefaultAsync
                 (
-                    x => x.Brand == request.Brand &&
+                    x => x.Id.ToString() != request.GlueId &&
+                    x.Brand == request.Brand &&
                     x.Weight == request.Weight &&                   
                     x.OwnerID == request.OwnerId               
                 );
@@ -53,6 +54,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdateGlue
                 {
                     Glue.Brand = request.Brand;
                     Glue.Weight = request.Weight;
+                    Glue.Stock = request.Stock;
                     
                     await _context.SaveChangesAsync(cancellationToken);
 

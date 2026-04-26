@@ -22,7 +22,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdateBackPane
         {
             var backpanel = await _context.BackPanel.FirstOrDefaultAsync(x => x.Id.ToString() == request.BackPanelId);
 
-            if (backpanel != null)
+            if (backpanel == null)
             {
                 return new UpdateBackPanelCommandResponse
                 {
@@ -45,6 +45,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdateBackPane
                 var IsContain = await _context.
                     BackPanel.
                     FirstOrDefaultAsync(x => x.OwnerID  == request.OwnerId &&
+                    x.Id.ToString() != request.BackPanelId &&
                     x.Color == request.Color &&
                     x.Thickness == request.Thickness && 
                     x.Brand == request.Brand);
@@ -68,8 +69,8 @@ namespace Application.Features.Command.MaterialTransactionCommand.UpdateBackPane
                     backpanel.Thickness = request.Thickness;
                     backpanel.Stock = request.Stock;
                     backpanel.Color = request.Color;
-                    backpanel.Cost = request.Cost;
-                    backpanel.Price = request.Price;
+                    backpanel.Brand = request.Brand;
+
                     await _context.SaveChangesAsync(cancellationToken);
 
                     return new UpdateBackPanelCommandResponse

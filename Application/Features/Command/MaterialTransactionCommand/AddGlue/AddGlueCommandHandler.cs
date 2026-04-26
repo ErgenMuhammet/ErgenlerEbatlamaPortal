@@ -40,8 +40,6 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddGlue
                 if (material != null)
                 {
                     material.Stock += request.Stock;
-                    material.Cost = request.Cost;
-                    material.Price = request.Price;
                     await _context.SaveChangesAsync(cancellationToken);
 
                     return new AddGlueCommandResponse
@@ -53,10 +51,8 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddGlue
                 else 
                 {
                     var Glue = new Glue
-                    {
-                        Brand = request.Brand,
-                        Cost = request.Cost,
-                        Price = request.Price,
+                    {   OwnerID = request.OwnerId,
+                        Brand = request.Brand,                        
                         Stock = request.Stock,
                         Weight = request.Weight,
                     };

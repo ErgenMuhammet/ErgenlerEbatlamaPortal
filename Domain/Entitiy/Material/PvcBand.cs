@@ -14,6 +14,5 @@ namespace Domain.Entitiy.Material
         public int Length { get; set; }
 
 
-        public float GetProfit() => Length / Cost * Price;
     }
 }

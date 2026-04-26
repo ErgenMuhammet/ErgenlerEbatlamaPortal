@@ -9,7 +9,7 @@ namespace Application.DTOs
 {
     public class IncomesDto
     {
-        
+        public string Id { get; set; }
         public DateTime? IncomeDate { get; set; } 
         public float Amount { get; set; }
         public string? Description { get; set; }

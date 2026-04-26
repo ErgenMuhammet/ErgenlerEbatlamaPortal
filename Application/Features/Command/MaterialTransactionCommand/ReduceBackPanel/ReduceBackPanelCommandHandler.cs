@@ -1,13 +1,7 @@
-﻿using Application.Features.Command.MaterialTransactionCommand.ReduceGlue;
-using Application.Interface;
-using Domain.Entitiy.Material;
+﻿using Application.Interface;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Application.Features.Command.MaterialTransactionCommand.ReduceBackPanel
 {

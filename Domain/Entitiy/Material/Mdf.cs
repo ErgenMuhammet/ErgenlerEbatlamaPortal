@@ -14,7 +14,7 @@ namespace Domain.Entitiy.Material
         public float Profit { get; set; }
         public int Weight { get; set; }
         
-        public float GetProfit() => Price - Cost;
+       
 
     }
 }

@@ -1,40 +1,39 @@
 ﻿using Application.Interface;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using SendGrid;
-using SendGrid.Helpers.Mail;
+using Resend;
 
 namespace Infrastructure.Services
 {
     public class EmailService : IEmailService
     {
         private readonly IConfiguration _configuration;
-
-
-        public EmailService(IConfiguration configuration)
+        private readonly IResend _resend;
+        public EmailService(IConfiguration configuration, IResend resend)
         {
             _configuration = configuration;
+            _resend = resend;            
         }
 
-        public async Task SendEmail(string toUser, string Subject, string htmlMessage)
+        public async Task SendEmail(string toUser, string Subject, string htmlbody)
         {
-            var apikey = _configuration["SendGrid:ApiKey"];
-            var client = new SendGridClient(apikey);
-
-            var from = new EmailAddress(_configuration["SendGrid:FromEmail"], _configuration["SendGrid:FromName"]);
-
-            var to = new EmailAddress(toUser);
-
-            var plainTextContent = System.Text.RegularExpressions.Regex.Replace(htmlMessage, "<[^>]*>", "");
-
-            var msg = MailHelper.CreateSingleEmail(from, to, Subject, plainTextContent, htmlMessage);
-
-            var response = await client.SendEmailAsync(msg);
-            if (!response.IsSuccessStatusCode)
+            
+            var from = _configuration["ResendEmail:FromEmail"];
+            var msg = new EmailMessage();
+            msg.From = from;
+            msg.To.Add(toUser);
+            msg.Subject = Subject;
+            msg.HtmlBody = htmlbody;
+          
+            try
             {
-                var error = await response.Body.ReadAsStringAsync();
-                throw new Exception($"SendGrid Hatası: {error}");
+               await _resend.EmailSendAsync(msg);
             }
+            catch (Exception ex)
+            {
+                throw new Exception($"Email gönderilirken bir hata ile karşılaşıldı. Hata : {ex.Message}");
+            }
+            
         }
 
     }

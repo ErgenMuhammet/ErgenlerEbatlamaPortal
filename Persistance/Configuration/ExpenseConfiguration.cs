@@ -16,13 +16,12 @@ namespace Persistence.Configuration
             builder.ToTable("Expense");
             builder.HasKey(x => x.Id);
             
-            builder.Property(x =>  x.OwnerId).IsRequired();
-            builder.Property(x => x.ExpenseDate).IsRequired(false);
+            builder.Property(x => x.ExpenseDate);
             builder.Property(x => x.Amount).IsRequired();
-            
+            builder.Property(x => x.Description).IsRequired();
 
             builder.HasOne(x => x.Owner).
-                WithMany().
+                WithMany(u => u.Expense).
                 HasForeignKey(x => x.OwnerId).
                 OnDelete(DeleteBehavior.Cascade);
 

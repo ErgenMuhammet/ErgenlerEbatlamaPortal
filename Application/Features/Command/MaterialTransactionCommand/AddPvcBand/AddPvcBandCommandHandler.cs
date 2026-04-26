@@ -49,10 +49,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddPvcBand
                         Brand = request.Brand,
                         Color = request.Color,
                         Thickness = request.Thickness,
-                        Length = request.Length,
                         Stock = request.Stock,
-                        Price = request.Price,
-                        Cost = request.Cost,
                         OwnerID = request.OwnerId
                     };
                     await _context.PvcBand.AddAsync(PvcBand);
@@ -67,7 +64,6 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddPvcBand
                 else
                 {
                     material.Stock += request.Stock;
-                    material.Cost = request.Cost;
                     await _context.SaveChangesAsync(cancellationToken);
 
                     return new AddPvcBandCommandResponse

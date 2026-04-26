@@ -8,6 +8,7 @@ namespace Application.DTOs
 {
     public class BackPanelDto
     {
+        public string BackPanelId { get; set; }
         public float Thickness { get; set; }
         public string? Color { get; set; }
         public string? Brand { get; set; }

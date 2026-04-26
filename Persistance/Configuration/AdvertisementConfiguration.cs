@@ -25,14 +25,14 @@ namespace Persistence.Configuration
 
             builder.Property(c => c.ImgUrl).IsRequired();
 
-            builder.Property(d => d.Latitude).IsRequired().
+            builder.Property(d => d.Latitude).
                 HasColumnType("decimal(10 , 8)");
 
-            builder.Property(d => d.Longitude).IsRequired().
+            builder.Property(d => d.Longitude).
                 HasColumnType("decimal(11 , 8)");
 
             builder.HasOne(y => y.Owner).
-                WithMany().
+                WithMany(u => u.Advertisements).
                 HasForeignKey(x => x.OwnerId).
                 OnDelete(DeleteBehavior.Cascade);
         }

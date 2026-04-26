@@ -35,6 +35,7 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetAllIncomes
 
             var Incomes = await _context.Incomes.Where(x => x.OwnerId == request.OwnerId).Select(x => new IncomesDto
             {
+               Id = x.Id.ToString(),
                Amount = x.Amount,
                Description = x.Description,
                IncomeDate = x.IncomeDate,

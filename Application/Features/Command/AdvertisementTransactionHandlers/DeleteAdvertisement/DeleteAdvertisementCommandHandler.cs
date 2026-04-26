@@ -27,13 +27,24 @@ namespace Application.Features.Command.AdvertisementTransactionHandlers.DeleteAd
 
             var Advs = await _context.Advertisements.
                 FirstOrDefaultAsync(x => x.OwnerId.ToString() == request.OwnerId && x.AdvertisementId.ToString() == request.AdvertisementId);
+
             
+
             if (Advs == null)
             {
                 return new DeleteAdvertisementCommandResponse
                 {
                     IsSucces = false,
                     Message = "İlgili ilan bulunamadı"
+                };
+            }
+                
+            if (Advs.OwnerId != request.OwnerId)
+            {
+                return new DeleteAdvertisementCommandResponse
+                {
+                    IsSucces = false,
+                    Message = "Sahibi olmadığınız ilanı silemezsiniz."
                 };
             }
 

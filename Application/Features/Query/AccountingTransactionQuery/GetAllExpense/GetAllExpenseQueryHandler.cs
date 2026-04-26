@@ -42,6 +42,7 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetAllExpense
                 Where(x => x.OwnerId == request.OwnerId).
                 Select(m => new ExpenseDto
                 {
+                    Id = m.Id.ToString(),
                     Amount = m.Amount,
                     Description = m.Description,
                     ExpenseDate = m.ExpenseDate,
