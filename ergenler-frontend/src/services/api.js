@@ -37,12 +37,14 @@ api.interceptors.response.use(
 // ===== AUTH =====
 export const authService = {
   login: (data) => api.post('/login', data),
-  register: (data) => api.post('/KayÄ±tOl', data),
+  register: (data) => api.post('/Register', data),
   confirmEmail: (userid, token) => api.post(`/ConfirmEmail?userid=${userid}&token=${token}`),
   passwordRecovery: (data) => api.patch('/PasswordRecovery', data),
   validateToken: (userId, token, data) => api.patch(`/ValidateToken?userId=${userId}&token=${token}`, data),
+  resetPassword: (userId, token, data) => api.patch(`/ResetPassword?id=${userId}&token=${token}`, data),
   updateMyProperty: (data) => api.patch('/UpdateMyProperty', data),
   updateMyJobsProperty: (data) => api.patch('/UpdateMyJobsProperty', data),
+  getMyProporties: () => api.patch('/GetMyProporties'),
 };
 
 // ===== MATERIALS / STOCK =====
@@ -102,7 +104,7 @@ export const accountingService = {
   // Incomes
   getAllIncomes: () => api.get('/Accounting/GetAllIncome'),
   addIncome: (data) => api.post('/Accounting/AddIncome', data),
-  
+
   // Profit & Loss
   getProfitLossSituation: () => api.get('/Accounting/GetProfitLossSituation'),
 };
@@ -111,11 +113,17 @@ export const accountingService = {
 export const advertisementService = {
   getAll: () => api.get('/GetAllAdvertisement'),
   getMine: () => api.get('/GetMyAdvertisement'),
-  getOne: (id) => api.delete(`/GetAdvertisement/${id}`), // API uses DELETE method
+  getOne: (id) => api.get(`/GetAdvertisement/${id}`),
   add: (data) => api.post('/AddAdvertisement', data),
-  update: (data) => api.patch('/UpdateAdvertisement', data),
-  delete: () => api.delete('/DeleteAdvertisement'),
-  offer: (data) => api.put('/OfferToAdvertisement', data),
+  update: (id, data) => api.patch(`/UpdateAdvertisement?AdvertisementId=${id}`, data),
+  delete: (id) => api.delete(`/DeleteAdvertisement/${id}`),
+  offer: (id, data) => api.put(`/OfferToAdvertisement/${id}`, data),
+};
+
+// ===== CHAT =====
+export const chatService = {
+  getMyChatList: () => api.patch('/GetMyChatList'),
+  getMyChatHistory: (targetId) => api.patch(`/GetMyChatHistory/${targetId}`),
 };
 
 export default api;

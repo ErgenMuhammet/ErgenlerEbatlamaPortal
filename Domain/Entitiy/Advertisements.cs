@@ -17,10 +17,10 @@ namespace Domain.Entitiy
         public decimal? Longitude { get; set; }
         public AppUser? Owner { get; set; }
         public string OwnerId { get; set; }
-        public string ImgUrl { get; set; }
         public bool? IsActive { get; set; } = true;
         public string? Bidder { get; set; }
         public Category TargetCategory { get; set; } = Category.Assembler | Category.Carpenter;
         public Category WhoCanShare { get; set; } = Category.Carpenter;
+        public bool OwnerConfirmForOffer { get; set; } = false;
     }
 }

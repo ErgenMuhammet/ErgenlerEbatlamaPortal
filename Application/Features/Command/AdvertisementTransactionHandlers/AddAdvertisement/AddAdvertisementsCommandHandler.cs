@@ -37,7 +37,6 @@ namespace Application.Features.Command.AdvertisementTransactionHandlers.AddAdver
                 var Advs = new Advertisements
                 {
                     AdvertisementAddress = request.AdvertisementAddress,
-                    ImgUrl = request.ImgUrl,
                     Latitude = request.Latitude,
                     Longitude = request.Longitude,
                     OwnerId = request.OwnerId,

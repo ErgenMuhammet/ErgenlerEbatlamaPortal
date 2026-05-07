@@ -11,6 +11,9 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetAllExpense
     {
         public bool IsSuccess { get; set; }
         public string? Message { get; set; }
-        public List<ExpenseDto> Expenses { get; set; }
+        public List<ExpenseDto> CreditCardExpenses { get; set; }
+        public List<ExpenseDto> CashExpenses { get; set; }
+        public List<ExpenseDto> OtherExpenses { get; set; }
+
     }
 }

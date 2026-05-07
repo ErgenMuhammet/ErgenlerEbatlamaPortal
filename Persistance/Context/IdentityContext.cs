@@ -32,7 +32,8 @@ namespace Persistence.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<Advertisements> Advertisements { get; set; }
         public DbSet<ChatMessage> Messages { get; set; }
-        
+        public DbSet<Notification> notifications { get; set; }
+
 
         public IdentityContext(DbContextOptions<IdentityContext> options) : base(options)
         { 

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,53 +17,42 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetPayedInvoice
     {
         private readonly IAppContext _context;
         private readonly UserManager<AppUser> _userManager;
-
-        public GetPayedInvoiceQueryHandler(UserManager<AppUser> userManager, IAppContext context)
+        public GetPayedInvoiceQueryHandler(IAppContext context, UserManager<AppUser> userManager)
         {
-            _userManager = userManager;
             _context = context;
+            _userManager = userManager;
         }
-          
+
         public async Task<GetPayedInvoiceQueryResponse> Handle(GetPayedInvoiceQueryRequest request, CancellationToken cancellationToken)
         {
-            var Owner = await _userManager.FindByIdAsync(request.OwnerId);
-
-            if (Owner == null)
+            if (request == null)
             {
-                return new GetPayedInvoiceQueryResponse
-                {
-                    IsSuccess = false,
-                    Invoices = null,
-                    Message = "Kullanıcı bilgisine ulaşılamadı.",
-                };
+                throw new ArgumentNullException();
             }
 
-            List<InvoiceDto> Invoices = await _context.Invoice
-                .Where(x => x.OwnerId == Owner.Id && x.BeenPaid == true)
-                .Select(m => new InvoiceDto
-                {
-                    Id = m.Id.ToString(),
-                    LastPaymentDate = m.LastPaymentDate,
-                    Name = m.InvoiceName,
-                    InvoicesNo = m.InvoiceNo,
-                    Price = m.Cost
-                }).AsNoTracking().ToListAsync();
+            var Invoices = await _context.Invoice.Where(x => x.OwnerId == request.OwnerId && x.BeenPaid == true).Select(x => new InvoiceDto
+            {
+                Id = x.Id.ToString(),
+                InvoicesNo = x.InvoiceNo,
+                LastPaymentDate = x.LastPaymentDate,    
+                Name = x.InvoiceName,
+                Price = x.Cost,
+                InvoiceType = x.InvoiceType }).ToListAsync(cancellationToken);
+
 
             if (Invoices.Count == 0)
             {
                 return new GetPayedInvoiceQueryResponse
                 {
-                    IsSuccess = true,
                     Invoices = Invoices,
-                    Message = "Listelenecek geçmiş fatura bulunamadı"
                 };
             }
 
             return new GetPayedInvoiceQueryResponse
             {
-                IsSuccess = true,
                 Invoices = Invoices,
-                Message = "Geçmiş faturalar başarı ile listelendi"
+                IsSuccess = true,
+                Message = "Ödenmiş faturalar getirildi."
             };
         }
     }

@@ -68,6 +68,15 @@
 .ad-card-address {
   font-size: 0.8rem;
   color: var(--text-muted);
+  margin-bottom: var(--space-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.ad-card-owner {
+  font-size: 0.8rem;
+  color: var(--text-muted);
   margin-bottom: var(--space-md);
   display: flex;
   align-items: center;
@@ -122,6 +131,32 @@
   background: rgba(99, 102, 241, 0.2);
 }
 
+.ad-action-btn.edit {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.ad-action-btn.edit:hover {
+  background: rgba(245, 158, 11, 0.2);
+}
+
+.ad-action-btn.delete {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.ad-action-btn.delete:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
 .ad-status-active {
   display: inline-flex;
   align-items: center;
@@ -137,4 +172,35 @@
   background: var(--success);
   border-radius: 50%;
   animation: pulse-glow 2s infinite;
+}
+
+/* Tabs */
+.ads-tabs {
+  display: flex;
+  gap: var(--space-sm);
+  background: var(--surface-100);
+  padding: 4px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+}
+
+.tab-btn {
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  background: var(--surface-200);
+  color: var(--primary-400);
+  box-shadow: var(--shadow-sm);
 }

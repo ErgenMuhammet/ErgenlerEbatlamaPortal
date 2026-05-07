@@ -1,4 +1,4 @@
-﻿using Application.Interface;
+﻿ using Application.Interface;
 using Domain.Entitiy;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;

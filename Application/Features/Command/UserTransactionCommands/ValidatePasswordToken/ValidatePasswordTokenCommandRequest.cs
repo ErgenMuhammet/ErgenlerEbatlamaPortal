@@ -11,10 +11,9 @@ namespace Application.Features.Command.UserTransaction.ValidatePasswordToken
     public class ValidatePasswordTokenCommandRequest : IRequest<ValidatePasswordTokenCommandResponse>
     {
         [JsonIgnore]
-        public string? userId{ get; set; }
+        public string? UserId{ get; set; }
 
         [JsonIgnore]
-        public string? passwordToken { get; set; }
-        public string? NewPassword { get; set; }
+        public string? PasswordToken { get; set; }
     }
 }

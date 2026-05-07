@@ -17,6 +17,7 @@ namespace Application.Features.Command.AccountingTransactionCommands.UpdateInvoi
         public string? InvoiceName { get; set; }
         public string? InvoiceNo { get; set; }
         public float Cost { get; set; }
+        public string InvoiceType { get; set; }
         public DateTime? LastPaymentDate { get; set; }
     }
 }

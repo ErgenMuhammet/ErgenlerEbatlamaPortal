@@ -19,5 +19,11 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddPvcBand
         public float Thickness { get; set; }
         public string? Color { get; set; }
 
+        public bool? IsPurchase { get; set; } = false;
+        public string? SaleDescription { get; set; }
+
+        public float? UnitPrice { get; set; }
+
+
     }
 }

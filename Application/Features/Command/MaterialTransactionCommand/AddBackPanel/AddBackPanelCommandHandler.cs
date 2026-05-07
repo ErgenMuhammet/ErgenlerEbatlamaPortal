@@ -25,6 +25,20 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddBackPanel
         public async Task<AddBackPanelCommandResponse> Handle(AddBackPanelCommandRequest request, CancellationToken cancellationToken)
         {
             var user = await _context.AppUsers.AnyAsync(x => x.Id == request.OwnerId, cancellationToken);
+            var UserAccounting = await _context.ProfitLossSituation
+           .FirstOrDefaultAsync( x => x.OwnerId == request.OwnerId &&
+                                 x.Date.Value.Year == DateTime.UtcNow.Year &&
+                                 x.Date.Value.Month == DateTime.UtcNow.Month, cancellationToken);
+
+            if (UserAccounting == null)
+            {
+                return new AddBackPanelCommandResponse
+                {
+                    IsSucces = false,
+                    Message = "Kullanıcı muhasebe bilgilerine ulaşılamadı"
+                };
+            }
+
 
             if (!user)
             {
@@ -42,6 +56,22 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddBackPanel
                 m.Color == request.Color && m.Thickness == request.Thickness);
             try
             {
+                if (request.IsPurchase == true)
+                {
+                    var Purchase = new Expense
+                    {
+                        Amount = request.Stock * request.UnitPrice ?? 0f,
+                        Description = request.SaleDescription,
+                        ExpenseDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
+                        OwnerId = request.OwnerId,
+                    };
+
+                    UserAccounting.TotalLoss += Purchase.Amount;
+                    UserAccounting.LastSituation = UserAccounting.GetLastSituation();
+
+                    await _context.Expense.AddAsync(Purchase, cancellationToken);
+                }
+
                 if (Material == null)
                 {
                     var BackPanel = new BackPanel

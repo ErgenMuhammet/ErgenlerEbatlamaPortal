@@ -65,7 +65,7 @@ namespace Application.Features.Command.AccountingTransaction.AddExpense
                     Description = request.Description,
                     ExpenseDate = request.ExpenseDate,
                     OwnerId = request.OwnerId,
-                    
+                    ExpenseType = request.ExpenseType,                  
                 };
 
                 await _context.AddAsync(expense, cancellationToken);

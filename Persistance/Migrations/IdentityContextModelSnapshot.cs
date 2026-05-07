@@ -39,10 +39,6 @@ namespace Persistence.Migrations
                     b.Property<string>("Bidder")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImgUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
@@ -51,6 +47,9 @@ namespace Persistence.Migrations
 
                     b.Property<decimal?>("Longitude")
                         .HasColumnType("decimal(11 , 8)");
+
+                    b.Property<bool>("OwnerConfirmForOffer")
+                        .HasColumnType("bit");
 
                     b.Property<string>("OwnerId")
                         .IsRequired()
@@ -268,6 +267,9 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("ExpenseDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ExpenseType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -294,6 +296,10 @@ namespace Persistence.Migrations
 
                     b.Property<DateTime?>("IncomeDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("IncomeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OwnerId")
                         .IsRequired()
@@ -328,6 +334,10 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("InvoiceType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastPaymentDate")
                         .HasColumnType("datetime2");
@@ -611,6 +621,27 @@ namespace Persistence.Migrations
                         .HasFilter("[Color] IS NOT NULL AND [OwnerID] IS NOT NULL");
 
                     b.ToTable("Scraps", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entitiy.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Notification", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entitiy.Order", b =>
@@ -939,6 +970,17 @@ namespace Persistence.Migrations
                         .WithMany("Scraps")
                         .HasForeignKey("OwnerID")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("Domain.Entitiy.Notification", b =>
+                {
+                    b.HasOne("Domain.Entitiy.AppUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Owner");
                 });

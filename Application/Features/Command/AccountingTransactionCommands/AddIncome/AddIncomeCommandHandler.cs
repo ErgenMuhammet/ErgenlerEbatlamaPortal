@@ -61,6 +61,7 @@ namespace Application.Features.Command.AccountingTransaction.AddIncome
                 Description = request.Description,
                 IncomeDate = DateTime.Now.Date,
                 OwnerId = Owner.Id,
+                IncomeType = request.IncomeType
             };
            
             try

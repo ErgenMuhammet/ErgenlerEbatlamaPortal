@@ -47,7 +47,6 @@ namespace Application.Features.Command.AdvertisementTransactionHandlers.UpdateAd
             }
 
             Advs.AdvertisementAddress = request.AdvertisementAddress;
-            Advs.ImgUrl = request.ImgUrl;
             Advs.Latitude = request.Latitude;
             Advs.Longitude = request.Longitude;
             Advs.Title = request.Title;

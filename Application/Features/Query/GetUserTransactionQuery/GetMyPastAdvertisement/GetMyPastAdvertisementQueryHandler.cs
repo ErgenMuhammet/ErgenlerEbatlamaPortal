@@ -32,11 +32,11 @@ namespace Application.Features.Query.GetUserTransactionQuery.GetMyPastAdvertisem
                         OwnerId = z.OwnerId,
                         AdvertisementAddress = z.AdvertisementAddress,
                         AdvertisementDate = z.AdvertisementDate,
-                        ImgUrl = z.ImgUrl,
                         Latitude = z.Latitude,
                         Longitude = z.Longitude,
                         Title = z.Title,
-                        IsActive = z.IsActive
+                        IsActive = z.IsActive,
+                        OwnerName = _context.AppUsers.Where(a => a.Id.ToString() == z.OwnerId).Select(b => b.FullName).FirstOrDefault()
                     }).ToListAsync(cancellationToken);
             }
             catch (Exception ex)

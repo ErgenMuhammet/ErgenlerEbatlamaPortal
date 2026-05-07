@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,11 +38,12 @@ namespace Application.Features.Query.GetAllAdvertisementQuery
                     Id = x.AdvertisementId.ToString(),
                     AdvertisementAddress = x.AdvertisementAddress,
                     AdvertisementDate = x.AdvertisementDate,
-                    ImgUrl = x.ImgUrl,
                     Latitude = x.Latitude,
                     Longitude = x.Longitude,
                     OwnerId = x.OwnerId,
                     Title = x.Title,
+                    OwnerName = _context.AppUsers.Where(a => a.Id.ToString() == x.OwnerId).Select(b => b.FullName).FirstOrDefault()
+
                 }).ToListAsync(cancellationToken);
             }
             catch (Exception ex)

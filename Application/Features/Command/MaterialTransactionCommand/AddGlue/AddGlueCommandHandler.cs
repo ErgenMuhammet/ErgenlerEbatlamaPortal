@@ -26,6 +26,20 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddGlue
         {
             var user = await _context.AppUsers.AnyAsync(x => x.Id == request.OwnerId);
 
+            var UserAccounting = await _context.ProfitLossSituation
+            .FirstOrDefaultAsync( x => x.OwnerId == request.OwnerId &&
+                                  x.Date.Value.Year == DateTime.UtcNow.Year &&
+                                  x.Date.Value.Month == DateTime.UtcNow.Month, cancellationToken);
+
+            if (UserAccounting == null)
+            {
+                return new AddGlueCommandResponse
+                {
+                    IsSucces = false,
+                    Message = "Kullanıcı muhasebe bilgilerine ulaşılamadı"
+                };
+            }
+
             if (!user)
             {
                 return new AddGlueCommandResponse
@@ -37,6 +51,22 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddGlue
             var material = await _context.Glue.FirstOrDefaultAsync(x => x.Brand == request.Brand && x.OwnerID == request.OwnerId);
             try
             {
+                if (request.IsPurchase == true)
+                {
+                    var Purchase = new Expense
+                    {
+                        Amount = request.Stock * request.UnitPrice ?? 0f,
+                        Description = request.SaleDescription,
+                        ExpenseDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
+                        OwnerId = request.OwnerId,
+                    };
+
+                    UserAccounting.TotalLoss += Purchase.Amount;
+                    UserAccounting.LastSituation = UserAccounting.GetLastSituation();
+
+                    await _context.Expense.AddAsync(Purchase, cancellationToken);
+                }
+
                 if (material != null)
                 {
                     material.Stock += request.Stock;
@@ -48,6 +78,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddGlue
                         Message = "Tutkal stoğu başarıyla güncellendi"
                     };
                 }
+                
                 else 
                 {
                     var Glue = new Glue
@@ -65,6 +96,8 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddGlue
                         Message = "Ürün başarıyla eklendi"
                     };
                 }
+
+
             }          
             catch (Exception ex)
             {

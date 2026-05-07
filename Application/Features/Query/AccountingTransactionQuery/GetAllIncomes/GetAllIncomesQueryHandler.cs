@@ -1,6 +1,5 @@
-﻿using Application.DTOs;
-using Application.Interface;
 using Application.DTOs;
+using Application.Interface;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,47 +28,61 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetAllIncomes
                 {
                     IsSucces = false,
                     Message = "Kullanıcı bilgisine ulaşılamadı",
-                    Incomes = null
                 };
             }
 
-            var Incomes = await _context.Incomes.Where(x => x.OwnerId == request.OwnerId).Select(x => new IncomesDto
+            try
             {
-               Id = x.Id.ToString(),
-               Amount = x.Amount,
-               Description = x.Description,
-               IncomeDate = x.IncomeDate,
+                var CreditCardIncome = await _context.Incomes
+                    .Where(x => x.OwnerId == request.OwnerId && x.IncomeType == "CreditCard")
+                    .Select(x => new IncomesDto
+                    {
+                        Id = x.Id.ToString(),
+                        Amount = x.Amount,
+                        Description = x.Description,
+                        IncomeDate = x.IncomeDate,
+                        IncomeType = x.IncomeType,
+                    }).AsNoTracking().ToListAsync(cancellationToken);
 
-            }).AsNoTracking().ToListAsync(cancellationToken);
+                var CashIncome = await _context.Incomes
+                    .Where(x => x.OwnerId == request.OwnerId && x.IncomeType == "Cash")
+                    .Select(x => new IncomesDto
+                    {
+                        Id = x.Id.ToString(),
+                        Amount = x.Amount,
+                        Description = x.Description,
+                        IncomeDate = x.IncomeDate,
+                        IncomeType = x.IncomeType,
+                    }).AsNoTracking().ToListAsync(cancellationToken);
 
-            if (Incomes.Count > 0)
+                var OtherIncome = await _context.Incomes
+                    .Where(x => x.OwnerId == request.OwnerId && x.IncomeType == "Other")
+                    .Select(x => new IncomesDto
+                    {
+                        Id = x.Id.ToString(),
+                        Amount = x.Amount,
+                        Description = x.Description,
+                        IncomeDate = x.IncomeDate,
+                        IncomeType = x.IncomeType,
+                    }).AsNoTracking().ToListAsync(cancellationToken);
+
+                return new GetAllIncomesQueryResponse
+                {
+                    OtherIncomes = OtherIncome,
+                    CashIncomes = CashIncome,
+                    CreditCardIncomes = CreditCardIncome,
+                    IsSucces = true,
+                    Message = "Gelir listesi başarıyla getirildi"
+                };
+            }
+            catch (Exception ex)
             {
                 return new GetAllIncomesQueryResponse
                 {
-                    IsSucces = true,
-                    Message = "Gelir listesi başarıyla getirildi",
-                    Incomes = Incomes
+                    IsSucces = false,
+                    Message = $"Gelirler listelenirken bir hata ile karşılaşıldı. Hata : {ex.Message}"
                 };
             }
-            else if(Incomes == null || Incomes.Count == 0)
-            {
-                return new GetAllIncomesQueryResponse
-                {
-                    IsSucces = true,
-                    Incomes = null,
-                    Message = "Görüntülenecek bir gelir bulunamadı"
-                };
-            }
-
-            return new GetAllIncomesQueryResponse
-            {
-                IsSucces = false,
-                Incomes = null,
-                Message = "Gelirler listelenirken bir hata oluştu."
-            };
-
-
-
         }
     }
 }

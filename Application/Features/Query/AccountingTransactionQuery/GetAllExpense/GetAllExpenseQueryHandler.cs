@@ -26,54 +26,78 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetAllExpense
         public async Task<GetAllExpenseQueryResponse> Handle(GetAllExpenseQueryRequest request, CancellationToken cancellationToken)
         {
             var Owner = await _userManager.FindByIdAsync(request.OwnerId);
-
+ 
             if (Owner == null)
             {
                 return new GetAllExpenseQueryResponse
                 {
-                    Expenses = null,
+                    CashExpenses = null,
+                    CreditCardExpenses = null,
                     IsSuccess = false,
                     Message = "Kullanıcı bilgisine ulaşılamadı.Daha sonra tekrar deneyiniz."
                 };
             }
 
-            var ExpenseList = await _context.
-                Expense.
-                Where(x => x.OwnerId == request.OwnerId).
-                Select(m => new ExpenseDto
-                {
-                    Id = m.Id.ToString(),
-                    Amount = m.Amount,
-                    Description = m.Description,
-                    ExpenseDate = m.ExpenseDate,
-                }).AsNoTracking().ToListAsync(cancellationToken);
-
-            if (ExpenseList.Count == 0)
+            try
             {
+               var CreditCardExpense = await _context.
+                   Expense.
+                   Where(x => x.OwnerId == request.OwnerId && x.ExpenseType == "CreditCard").
+                   Select(m => new ExpenseDto
+                   {
+                       Id = m.Id.ToString(),
+                       Amount = m.Amount,
+                       Description = m.Description,
+                       ExpenseDate = m.ExpenseDate,
+                       ExpenseType = m.ExpenseType,
+                   }).AsNoTracking().ToListAsync(cancellationToken);
+
+                var CashExpense = await _context.
+                    Expense.
+                    Where(x => x.OwnerId == request.OwnerId && x.ExpenseType == "Cash" ).
+                    Select(m => new ExpenseDto
+                    {
+                        Id = m.Id.ToString(),
+                        Amount = m.Amount,
+                        Description = m.Description,
+                        ExpenseDate = m.ExpenseDate,
+                        ExpenseType = m.ExpenseType,
+                    }).AsNoTracking().ToListAsync(cancellationToken);
+
+                var OtherExpense = await _context.
+                   Expense.
+                   Where(x => x.OwnerId == request.OwnerId && x.ExpenseType == "Other").
+                   Select(m => new ExpenseDto
+                   {
+                       Id = m.Id.ToString(),
+                       Amount = m.Amount,
+                       Description = m.Description,
+                       ExpenseDate = m.ExpenseDate,
+                       ExpenseType = m.ExpenseType,
+
+                   }).AsNoTracking().ToListAsync(cancellationToken);
+
                 return new GetAllExpenseQueryResponse
                 {
-                    Expenses = null,
-                    IsSuccess = false,
-                    Message = "Görüntülenecek harcama bulunmamaktadır."
-                };
-            }
-
-            if (ExpenseList.Count > 0)
-            {
-                return new GetAllExpenseQueryResponse
-                {
-                    Expenses = ExpenseList,
+                    OtherExpenses = OtherExpense,
+                    CashExpenses = CashExpense,
+                    CreditCardExpenses = CreditCardExpense,
                     IsSuccess = true,
                     Message = "Harcamalar Listelendi."
                 };
+
+            }
+            catch (Exception ex)
+            {
+
+                return new GetAllExpenseQueryResponse
+                {
+                    
+                    IsSuccess = false,
+                    Message = $"Harcamalar görüntülenirken bir hata ile karşılaşıldı.Hata : {ex.Message}"
+                }; 
             }
 
-            return new GetAllExpenseQueryResponse
-            {
-                Expenses = null,
-                IsSuccess = false,
-                Message = "Harcamalar görüntülenirken bir hata ile karşılaşıldı."
-            };
         }
 
     }

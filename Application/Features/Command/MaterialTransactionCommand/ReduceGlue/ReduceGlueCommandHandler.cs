@@ -1,6 +1,7 @@
 ﻿using Application.Features.Command.MaterialTransactionCommand.ReduceBackPanel;
 using Application.Features.Command.MaterialTransactionCommand.ReduceMdf;
 using Application.Interface;
+using Domain.Entitiy;
 using Domain.Entitiy.Material;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,19 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceGlue
 
             var Glue = await _context.Glue.
                 FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerID && x.Id.ToString() == request.GlueId);
+            var UserAccounting = await _context.ProfitLossSituation
+            .FirstOrDefaultAsync( x => x.OwnerId == request.OwnerID &&
+                                  x.Date.Value.Year == DateTime.UtcNow.Year &&
+                                  x.Date.Value.Month == DateTime.UtcNow.Month, cancellationToken);
+
+            if (UserAccounting == null)
+            {
+                return new ReduceGlueCommandResponse
+                {
+                    IsSuccess = false,
+                    Message = "Kullanıcı muhasebe bilgilerine ulaşılamadı"
+                };
+            }
 
             if (Glue == null)
             {
@@ -59,6 +73,24 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceGlue
             }
 
             Glue.Stock -= request.Count;
+
+            if (request.IsSale == true)
+            {
+                var Sale = new Income
+                {
+                    Amount = request.Count * request.UnitPrice ?? 0f,
+                    Description = request.SaleDescription,
+                    IncomeDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
+                    OwnerId = request.OwnerID,
+                };
+
+                await _context.Incomes.AddAsync(Sale, cancellationToken);
+
+                UserAccounting.TotalProfit += Sale.Amount;
+                UserAccounting.LastSituation = UserAccounting.GetLastSituation();
+
+                await _context.Incomes.AddAsync(Sale, cancellationToken);
+            }
 
             try
             {

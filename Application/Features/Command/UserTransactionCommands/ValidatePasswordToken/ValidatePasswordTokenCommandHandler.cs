@@ -21,7 +21,7 @@ namespace Application.Features.Command.UserTransaction.ValidatePasswordToken
 
         public async Task<ValidatePasswordTokenCommandResponse> Handle(ValidatePasswordTokenCommandRequest request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByIdAsync(request.userId);
+            var user = await _userManager.FindByIdAsync(request.UserId);
 
             if (user == null)
             {
@@ -31,24 +31,25 @@ namespace Application.Features.Command.UserTransaction.ValidatePasswordToken
                     Message = "Kullanıcı bilgisi okunamadı. Token geçersiz veya süresi dolmuş. Daha sonra tekrar deneyiniz."
                 };
             }
-                var decodedtokenbytes = WebEncoders.Base64UrlDecode(request.passwordToken);
-                var decodedtoken = Encoding.UTF8.GetString(decodedtokenbytes);
+                
 
-                var result = await _userManager.ResetPasswordAsync(user, decodedtoken, request.NewPassword);
+                var result = await _userManager.VerifyUserTokenAsync(user, 
+                    _userManager.Options.Tokens.PasswordResetTokenProvider,
+                    "ResetPassword", request.PasswordToken  );
 
-                if (result.Succeeded)
+                if (result)
                 {
                     return new ValidatePasswordTokenCommandResponse
                     {
                         IsSucces = true,
-                        Message = "Şifreniz başarı ile güncellenmiştir. Yeni şifreniz ile giriş yapabilirsiniz."
+                        Message = "Şifre sıfırlama sayfasına yönlendiriliyorsunuz."
                     };
                 }
 
                 return new ValidatePasswordTokenCommandResponse
                 {
                     IsSucces = false,
-                    Message = "Şifre değiştirilirken bir hata ile karşılaşıldı daha sonra tekrar deneyiniz."
+                    Message = "Token geçersiz veya süresi dolmuş tekrar deneyiniz."
                 };
         }
     }

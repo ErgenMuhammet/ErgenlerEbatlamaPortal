@@ -1,4 +1,4 @@
-﻿using Application.DTOs;
+using Application.DTOs;
 using Application.Interface;
 using Domain.Entitiy;
 using MediatR;
@@ -27,36 +27,80 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetInvoices
                 return new GetAllInvoicesQueryResponse
                 {
                     IsSucces = false,
-                    Invoices = null,
                     Message = "Kullanıcı bilgisine ulaşılamadı.",
 
                 };
             }
 
-            List<InvoiceDto> Invoices = await _context.Invoice.Where(x => x.OwnerId == Owner.Id).Select(m => new InvoiceDto
-            {
-                Id = m.Id.ToString(),
-                LastPaymentDate = m.LastPaymentDate,
-                Name = m.InvoiceName,
-                InvoicesNo = m.InvoiceNo,
-                Price = m.Cost,
+            List<InvoiceDto> ElectricInvoices = await _context.Invoice.Where(x => x.OwnerId == Owner.Id && x.BeenPaid == false && x.InvoiceType == "Electric").Select(m => new InvoiceDto
+                {
+                    Id = m.Id.ToString(),
+                    LastPaymentDate = m.LastPaymentDate,
+                    Name = m.InvoiceName,
+                    InvoicesNo = m.InvoiceNo,
+                    Price = m.Cost,
+                    BeenPaid = m.BeenPaid,
+                InvoiceType = m.InvoiceType ?? "Electric",
+
+            }).AsNoTracking().OrderByDescending(x => x.LastPaymentDate).ToListAsync();
+
+            List<InvoiceDto> WaterInvoices = await _context.Invoice.Where(x => x.OwnerId == Owner.Id && x.BeenPaid == false && x.InvoiceType == "Water").Select(m => new InvoiceDto
+                {
+                    Id = m.Id.ToString(),
+                    LastPaymentDate = m.LastPaymentDate,
+                    Name = m.InvoiceName,
+                    InvoicesNo = m.InvoiceNo,
+                    Price = m.Cost,
+                    BeenPaid = m.BeenPaid,
+                InvoiceType = m.InvoiceType ?? "Water",
+
+            }).AsNoTracking().OrderByDescending(x => x.LastPaymentDate).ToListAsync();
+
+            List<InvoiceDto> NaturalGasInvoices = await _context.Invoice.Where(x => x.OwnerId == Owner.Id && x.BeenPaid == false && x.InvoiceType == "NaturalGas" ).Select(m => new InvoiceDto
+                {
+                    Id = m.Id.ToString(),
+                    LastPaymentDate = m.LastPaymentDate,
+                    Name = m.InvoiceName,
+                    InvoicesNo = m.InvoiceNo,
+                    Price = m.Cost,
+                    BeenPaid = m.BeenPaid,
+                InvoiceType = m.InvoiceType ?? "NaturalGas",
+
+            }).AsNoTracking().OrderByDescending(x => x.LastPaymentDate).ToListAsync();
+
+            List<InvoiceDto> OtherInvoices = await _context.Invoice.Where(x => x.OwnerId == Owner.Id && x.BeenPaid == false && x.InvoiceType == "Other" ).Select(m => new InvoiceDto
+                {
+                    Id = m.Id.ToString(),
+                    LastPaymentDate = m.LastPaymentDate,
+                    Name = m.InvoiceName,
+                    InvoicesNo = m.InvoiceNo,
+                    Price = m.Cost,
+                    BeenPaid = m.BeenPaid,
+                InvoiceType = m.InvoiceType ?? "Other",
+
+            }).AsNoTracking().OrderByDescending(x => x.LastPaymentDate).ToListAsync();
+
+            List<InvoiceDto> PaidInvoices = await _context.Invoice.Where(x => x.OwnerId == Owner.Id && x.BeenPaid == true).Select(m => new InvoiceDto
+                {
+                    Id = m.Id.ToString(),
+                    LastPaymentDate = m.LastPaymentDate,
+                    Name = m.InvoiceName,
+                    InvoicesNo = m.InvoiceNo,
+                    Price = m.Cost,
+                    BeenPaid = m.BeenPaid,
+                    InvoiceType = m.InvoiceType ?? "Other",
 
             }).AsNoTracking().ToListAsync();
 
-            if (Invoices.Count == 0)
-            {
-                return new GetAllInvoicesQueryResponse
-                {
-                    IsSucces = true,
-                    Invoices = Invoices,
-                    Message = "Listelenecek fatura bulunamadı"
-                };
-            }
 
             return new GetAllInvoicesQueryResponse
             {
                 IsSucces = true,
-                Invoices = Invoices,
+                ElectricInvoices = ElectricInvoices,
+                NaturalGasInvoices = NaturalGasInvoices,
+                WaterInvoices = WaterInvoices,
+                OtherInvoices = OtherInvoices,
+                PaidInvoice = PaidInvoices,
                 Message = "Faturalar başarı ile listelendi"
             };
         }

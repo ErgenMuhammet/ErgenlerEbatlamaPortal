@@ -14,5 +14,8 @@ namespace Domain.Entitiy
 
         public bool? BeenPaid { get; set; } = false;
 
+        public string InvoiceType { get; set; }
+
+
     }
 }

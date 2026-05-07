@@ -1,9 +1,10 @@
-﻿using Application.Features.Command.AdvertisementTransactionHandlers.AddAdvertisement;
+using Application.Features.Command.AdvertisementTransactionHandlers.AddAdvertisement;
 using Application.Features.Command.AdvertisementTransactionHandlers.DeleteAdvertisement;
 using Application.Features.Command.AdvertisementTransactionHandlers.OfferToAdvertisement;
 using Application.Features.Command.AdvertisementTransactionHandlers.UpdateAdvertisement;
 using Application.Features.Query.GetAdvertisement;
 using Application.Features.Query.GetAllAdvertisementQuery;
+using Application.Features.Query.GetTheBiddersAdvertisements;
 using Application.Features.Query.GetUserTransactionQuery.GetMyPastAdvertisement;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -126,20 +127,40 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("OfferToAdvertisement")]
-        public async Task<IActionResult> OfferToAdvertisement([FromRoute] OfferToAdvertisementCommandRequest request)
+        [HttpPut("OfferToAdvertisement/{AdvertisementId}")]
+        public async Task<IActionResult> OfferToAdvertisement([FromRoute] string AdvertisementId)
         {
-            request.OwnerId = request.OwnerId;
+            var request = new OfferToAdvertisementCommandRequest();
+
+            request.OwnerId = UserId;
+
+            request.AdvertisementId = AdvertisementId;
 
             var result = await _mediatR.Send(request);
 
             if (!result.IsSucces)
             {
                 return BadRequest(result);
-            }
-
+            }           
             return Ok(result);
+        }
 
+        [HttpGet("GetTheBiddersAdvertisement/{BidderstId}")]
+        public async Task<IActionResult> GetTheBiddersAdvertisement([FromRoute] string BidderstId)
+        {
+            var request = new GetTheBiddersAdvertisementRequest();
+
+            request.OwnerId = UserId;
+
+            request.BiddersId = BidderstId;
+
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
     }
 }

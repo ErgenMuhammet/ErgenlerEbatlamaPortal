@@ -225,6 +225,41 @@
   gap: var(--space-md);
 }
 
+.topbar-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-200);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.topbar-btn:hover {
+  background: var(--surface-300);
+  color: var(--primary-400);
+  border-color: var(--primary-500);
+  transform: translateY(-2px);
+}
+
+.notification-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 10px;
+  height: 10px;
+  background: var(--accent-rose);
+  border: 2px solid var(--surface-200);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 10px rgba(251, 113, 133, 0.5);
+}
+
 .page-content {
   padding: var(--space-xl);
 }

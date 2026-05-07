@@ -9,7 +9,7 @@ namespace Domain.Entitiy
         public AppUser? Owner { get; set; }
         public string OwnerId { get; set; }
 
-       
+        public string? ExpenseType { get; set; }
 
         public float Amount { get; set; }
         public string Description { get; set; }

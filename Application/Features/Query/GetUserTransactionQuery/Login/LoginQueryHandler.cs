@@ -47,7 +47,8 @@ namespace Application.Features.Query.GetUserTransactionQuery.Login
                 Expiration = DateTime.Now.AddMinutes(45),
                 Token = token,
                 UserId = user.Id,
-                Job = user.UserCategory
+                Job = user.UserCategory,
+                Name = user.FullName
             };
         }
     }

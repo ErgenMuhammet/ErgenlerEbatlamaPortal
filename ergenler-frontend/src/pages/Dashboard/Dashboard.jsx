@@ -88,7 +88,7 @@ export default function Dashboard() {
       {/* Welcome & Theme Toggle */}
       <div className="dashboard-welcome slide-up" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h2>Hoş geldiniz, {user?.fullName || 'Kullanıcı'} 👋</h2>
+          <h2>Hoş geldiniz, {(user?.name || user?.fullName || 'Kullanıcı').toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</h2>
           <p>Ergenler Ebatlama Portal — işletmenizi tek noktadan yönetin.</p>
         </div>
         <button 

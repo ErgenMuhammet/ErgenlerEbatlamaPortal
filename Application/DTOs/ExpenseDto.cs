@@ -13,5 +13,6 @@ namespace Application.DTOs
         public DateTime? ExpenseDate { get; set; } = DateTime.Now.Date;
         public float? Amount { get; set; }
         public string? Description { get; set; }
+        public string  ExpenseType { get; set; }
     }
 }

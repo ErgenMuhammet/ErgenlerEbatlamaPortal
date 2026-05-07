@@ -1,4 +1,4 @@
-﻿using Application.DTOs;
+using Application.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,13 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetInvoices
     {
         public bool IsSucces { get; set; }
         public string? Message { get; set; }
-        public List<InvoiceDto> Invoices { get; set; }
 
+        public List<InvoiceDto>? NaturalGasInvoices { get; set; }
+        public List<InvoiceDto>? WaterInvoices { get; set; }
+        public List<InvoiceDto>? ElectricInvoices { get; set; }
+        public List<InvoiceDto>? OtherInvoices { get; set; }
+
+        public List <InvoiceDto>? PaidInvoice { get; set; }
+        
     }
 }

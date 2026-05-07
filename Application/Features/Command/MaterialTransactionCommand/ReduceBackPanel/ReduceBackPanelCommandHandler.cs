@@ -1,4 +1,6 @@
-﻿using Application.Interface;
+﻿using Application.Features.Command.MaterialTransactionCommand.AddBackPanel;
+using Application.Interface;
+using Domain.Entitiy;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +26,21 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceBackPane
 
             var Backpanel = await _context.BackPanel.
                 FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerId && x.Id.ToString() == request.BackPanelId);
+
+            var UserAccounting = await _context.ProfitLossSituation
+           .FirstOrDefaultAsync(x => x.OwnerId == request.OwnerId &&
+                                 x.Date.Value.Year == DateTime.UtcNow.Year &&
+                                 x.Date.Value.Month == DateTime.UtcNow.Month, cancellationToken);
+
+            if (UserAccounting == null)
+            {
+                return new ReduceBackPanelCommandResponse
+                {
+                    IsSuccess = false,
+                    Message = "Kullanıcı muhasebe bilgilerine ulaşılamadı"
+                };
+            }
+
 
             if (Backpanel == null)
             {
@@ -53,6 +70,22 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceBackPane
             }
 
             Backpanel.Stock -= request.Count;
+
+            if (request.IsSale == true)
+            {
+                var Sale = new Income
+                {
+                    Amount = request.Count * request.UnitPrice ?? 0f,
+                    Description = request.SaleDescription,
+                    IncomeDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
+                    OwnerId = request.OwnerId,
+                };
+                await _context.Incomes.AddAsync(Sale,cancellationToken);
+                UserAccounting.TotalProfit += Sale.Amount;
+                UserAccounting.LastSituation =  UserAccounting.GetLastSituation();
+
+                await _context.Incomes.AddAsync(Sale, cancellationToken);
+            }
 
             try
             {

@@ -13,6 +13,7 @@ namespace Application.DTOs
         public float? Price { get; set; }
         public DateTime? LastPaymentDate { get; set; }
         public string? InvoicesNo { get; set; }
-
+        public bool? BeenPaid { get; set; }
+        public string InvoiceType { get; set; }
     }
 }

@@ -54,7 +54,7 @@ namespace Application.Features.Command.AccountingTransaction.PayTheInvoice
 
             }
 
-            var Invoice = await _context.Invoice.Where(x => x.Id.ToString() == request.InvoiceId).FirstOrDefaultAsync();
+            var Invoice = await _context.Invoice.FirstOrDefaultAsync(x => x.Id.ToString() == request.InvoiceId);
 
             if (Invoice == null) 
             {

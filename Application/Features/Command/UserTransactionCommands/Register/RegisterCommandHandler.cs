@@ -30,7 +30,7 @@ namespace Application.Features.Command.UserTransaction.Register
         {
             if (request == null)
             {
-                throw new ArgumentNullException("İstek sınıfı boş parametreler dönderdi");
+                throw new ArgumentNullException(nameof(request));
             }
 
             if (request.Password != request.PasswordConfirm)
@@ -106,7 +106,7 @@ namespace Application.Features.Command.UserTransaction.Register
 
             var EncodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
-            string baseUrl = "http://localhost:5293";
+            string baseUrl = "http://localhost:5173";
 
             var confirmationLink = $"{baseUrl}/Portal/ConfirmEmail?userId={user.Id}&token={EncodedToken}";
 

@@ -25,9 +25,19 @@ namespace Application.Features.Query.GetAdvertisement
             {
                 throw new ArgumentNullException(nameof(request));
             }
-
             var Advs = await _context.Advertisements.FirstOrDefaultAsync(x => x.AdvertisementId.ToString() == request.AdvertismentId);
 
+            var user = await _context.AppUsers.FirstOrDefaultAsync(x => x.Id.ToString() == Advs.OwnerId, cancellationToken);
+
+            if (user == null)
+            {
+                return new GetAdvertisementQueryResponse
+                {
+                    Advs = null,
+                    IsSucces = false,
+                    Message = "İlan sahibinin bilgisine ulaşılamadı."
+                };
+            }
             if (Advs == null)
             {
                 return new GetAdvertisementQueryResponse
@@ -42,11 +52,11 @@ namespace Application.Features.Query.GetAdvertisement
             {
                 AdvertisementAddress = Advs.AdvertisementAddress,
                 AdvertisementDate = Advs.AdvertisementDate,
-                ImgUrl = Advs.ImgUrl,
                 Latitude = Advs.Latitude,
                 Longitude = Advs.Longitude,
                 Title = Advs.Title,
                 OwnerId = Advs.OwnerId,
+                OwnerName = user.FullName
             };
 
             return new GetAdvertisementQueryResponse

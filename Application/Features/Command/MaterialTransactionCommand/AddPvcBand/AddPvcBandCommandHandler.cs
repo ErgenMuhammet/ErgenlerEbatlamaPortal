@@ -5,6 +5,7 @@ using Domain.Entitiy.Material;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.Json;
 
 
 namespace Application.Features.Command.MaterialTransactionCommand.AddPvcBand
@@ -24,6 +25,19 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddPvcBand
         {
             var user = await _userManager.FindByIdAsync(request.OwnerId);
 
+            var UserAccounting = await _context.ProfitLossSituation
+                .FirstOrDefaultAsync(x => x.OwnerId == request.OwnerId &&
+                                        x.Date.Value.Year == DateTime.UtcNow.Year &&
+                                        x.Date.Value.Month == DateTime.UtcNow.Month, cancellationToken);
+            if (UserAccounting == null)
+            {
+                return new AddPvcBandCommandResponse
+                {
+                    IsSucces = false,
+                    Message = "Kullanıcı muhasebe bilgilerine ulaşılamadı"
+                };
+            }
+
             if (user == null)
             {
                 return new AddPvcBandCommandResponse
@@ -42,6 +56,23 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddPvcBand
                 x.Thickness == request.Thickness);
             try
             {
+
+                if (request.IsPurchase == true)
+                {
+                    var Purchase = new Expense
+                    {
+                        Amount = request.Stock * request.UnitPrice ?? 0f,
+                        Description = request.SaleDescription,
+                        ExpenseDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
+                        OwnerId = request.OwnerId,
+                    };
+
+                    UserAccounting.TotalLoss += Purchase.Amount;
+                    UserAccounting.LastSituation = UserAccounting.GetLastSituation();
+
+                    await _context.Expense.AddAsync(Purchase, cancellationToken);
+                }
+
                 if (material == null)
                 {
                     var PvcBand = new PvcBand
@@ -52,6 +83,7 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddPvcBand
                         Stock = request.Stock,
                         OwnerID = request.OwnerId
                     };
+
                     await _context.PvcBand.AddAsync(PvcBand);
                     await _context.SaveChangesAsync(cancellationToken);
 

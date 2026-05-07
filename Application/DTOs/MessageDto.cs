@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs
 {
-    public class MessageDto
-    {
-        public string Content { get; set; }
-        public DateTime SendAt { get; set; } = DateTime.Parse(DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
-        public string SenderId { get; set; }
-    }
+        public class MessageDto
+        {
+            public string Content { get; set; }
+            public DateTime SendAt { get; set; } = DateTime.Parse(DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+            public bool IsMine { get; set; }
+        }
 }

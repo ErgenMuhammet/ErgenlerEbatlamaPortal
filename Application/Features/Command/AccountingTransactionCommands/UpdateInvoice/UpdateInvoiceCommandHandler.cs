@@ -53,6 +53,7 @@ namespace Application.Features.Command.AccountingTransactionCommands.UpdateInvoi
             {
                 invoice.InvoiceNo = request.InvoiceNo;
                 invoice.InvoiceName = request.InvoiceName;
+                invoice.InvoiceType = request.InvoiceType;
 
                 await _context.SaveChangesAsync(cancellationToken);
                 

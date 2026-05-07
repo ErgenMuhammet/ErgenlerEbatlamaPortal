@@ -38,7 +38,7 @@ namespace Application.Features.Command.AccountingTransaction.AddInvoice
                 OwnerId = request.OwnerId,
                 InvoiceNo = request.InvoiceNo,
                 LastPaymentDate = request.LastPaymentDate,
-                Owner = user,
+                InvoiceType = request.InvoiceType ?? "Diğer Ödemeler" ,
             };
 
             var IsContain = await _context.Invoice.AnyAsync(x => x.InvoiceNo == request.InvoiceNo && 

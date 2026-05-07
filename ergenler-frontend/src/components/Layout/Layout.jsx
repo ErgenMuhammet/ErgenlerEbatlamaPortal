@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { authService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import {
   FiHome, FiPackage, FiShoppingCart, FiDollarSign,
-  FiStar, FiLogOut, FiMenu, FiX, FiUser
+  FiStar, FiLogOut, FiMenu, FiX, FiUser, FiLayers,
+  FiMessageSquare, FiBell
 } from 'react-icons/fi';
 import './Layout.css';
 
@@ -24,7 +26,9 @@ const navItems = [
     section: 'İş Yönetimi',
     items: [
       { to: '/orders', label: 'Siparişler', icon: <FiShoppingCart /> },
+      { to: '/measurements', label: 'Ebatlama & Ölçüler', icon: <FiLayers /> },
       { to: '/advertisements', label: 'İlanlar', icon: <FiStar /> },
+      { to: '/chat', label: 'Mesajlar', icon: <FiMessageSquare /> },
     ],
   },
   {
@@ -45,9 +49,11 @@ const pageTitles = {
   '/dashboard': 'Genel Bakış',
   '/stock': 'Stok Yönetimi',
   '/orders': 'Sipariş Yönetimi',
+  '/measurements': 'Ebatlama & Ölçü Detayları',
   '/advertisements': 'İlan Yönetimi',
   '/accounting': 'Muhasebe',
   '/profile': 'Profil Ayarları',
+  '/chat': 'Mesajlaşma',
 };
 
 export default function Layout() {
@@ -56,9 +62,31 @@ export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const currentTitle = pageTitles[location.pathname] || 'Portal';
-  const initials = user?.fullName
-    ? user.fullName.split(' ').map((n) => n[0]).join('').toUpperCase()
-    : 'U';
+  
+  const formatName = (str) => {
+    if (!str) return 'Kullanıcı';
+    return str.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  };
+
+  const userName = formatName(user?.name || user?.fullName);
+  const initials = userName.split(' ').map((n) => n[0]).join('').toUpperCase();
+
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const res = await authService.getMyNotifications();
+        if (res.data?.isSuccess) {
+          setNotifications(res.data.notifications || []);
+        }
+      } catch (err) {
+        console.error("Bildirimler alınamadı:", err);
+      }
+    };
+    if (user) fetchNotifications();
+  }, [user]);
 
   return (
     <div className="layout">
@@ -76,7 +104,7 @@ export default function Layout() {
             <div className="sidebar-logo-text">
               <h1>Ergenler Portal</h1>
               <span style={{ fontSize: '0.85rem', color: 'var(--primary-color)' }}>
-                {user?.fullName || 'Ebatlama Yönetimi'}
+                {userName}
               </span>
             </div>
           </div>
@@ -105,7 +133,7 @@ export default function Layout() {
           <div className="sidebar-user">
             <div className="sidebar-user-avatar">{initials}</div>
             <div className="sidebar-user-info">
-              <div className="sidebar-user-name">{user?.fullName || 'Kullanıcı'}</div>
+              <div className="sidebar-user-name">{userName}</div>
               <div className="sidebar-user-role">Aktif</div>
             </div>
             <button className="sidebar-logout-btn" onClick={logout} title="Çıkış Yap">
@@ -124,7 +152,35 @@ export default function Layout() {
             </button>
             <h2 className="topbar-title">{currentTitle}</h2>
           </div>
-          <div className="topbar-actions" />
+          <div className="topbar-actions">
+            <div className="notification-wrapper">
+              <button 
+                className="topbar-btn" 
+                title="Bildirimler"
+                onClick={() => setShowNotifications(!showNotifications)}
+              >
+                <FiBell />
+                {notifications.length > 0 && <span className="notification-badge" />}
+              </button>
+              
+              {showNotifications && (
+                <div className="notification-dropdown">
+                  <div className="notification-dropdown-header">Bildirimler</div>
+                  <div className="notification-dropdown-list">
+                    {notifications.length === 0 ? (
+                      <div className="notification-empty">Bildirim bulunmuyor.</div>
+                    ) : (
+                      notifications.map((notif, idx) => (
+                        <div key={idx} className="notification-item">
+                          {notif.content}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </header>
 
         <div className="page-content fade-in">

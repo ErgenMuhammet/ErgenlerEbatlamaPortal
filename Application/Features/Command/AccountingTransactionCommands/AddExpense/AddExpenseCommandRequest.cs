@@ -17,5 +17,6 @@ namespace Application.Features.Command.AccountingTransaction.AddExpense
         public DateTime? ExpenseDate { get; set; }             
         public float Amount { get; set; }
         public string? Description { get; set; }
+        public string ExpenseType { get; set; }
     }
 }

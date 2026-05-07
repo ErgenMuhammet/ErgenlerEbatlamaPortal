@@ -42,18 +42,35 @@ export default function Profile() {
   });
 
   useEffect(() => {
-    // Profil ilk yüklendiğinde mevcut kullanıcı bilgilerini dolduruyoruz
-    if (user) {
-      setPersonalData({
-        fullName: user.fullName || '',
-        city: user.city || '',
-        email: user.email || '',
-        password: '',
-        birthDate: user.birthDate ? new Date(user.birthDate).toISOString().split('T')[0] : '',
-      });
-      // Eğer user modelinde iş bilgileri geliyorsa buraya eklenebilir
-    }
-  }, [user]);
+    const fetchProfileData = async () => {
+      try {
+        const res = await authService.getMyProporties();
+        const isSucces = res.data?.isSucces || res.data?.IsSucces;
+        const u = res.data?.user || res.data?.User;
+
+        if (isSucces && u) {
+          setPersonalData({
+            fullName: u.fullName || u.FullName || '',
+            email: u.email || u.Email || '',
+            city: u.city || u.City || '', 
+            password: '',
+            birthDate: (u.birthDate || u.BirthDate) ? new Date(u.birthDate || u.BirthDate).toISOString().split('T')[0] : '',
+          });
+          
+          setJobData({
+            workShopName: u.workShopName || u.WorkShopName || '',
+            adressDescription: u.adressDescription || u.AdressDescription || '',
+            experience: u.experience || u.Experience || 0,
+            phoneNumber: u.phoneNumber || u.PhoneNumber || u.workPhoneNumber || u.WorkPhoneNumber || '',
+          });
+        }
+      } catch (err) {
+        console.error("Profil bilgileri getirilemedi:", err);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
 
   const handlePersonalUpdate = async (e) => {
     e.preventDefault();

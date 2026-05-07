@@ -1,6 +1,7 @@
 using Application.Interface;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,10 +19,15 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetProfitLossSit
 
         public async Task<GetProfitLossSituationQueryResponse> Handle(GetProfitLossSituationQueryRequest request, CancellationToken cancellationToken)
         {
-            var data = await _context.ProfitLossSituation
-                .FirstOrDefaultAsync(p => p.OwnerId == request.OwnerId, cancellationToken);
 
-            if (data == null)
+            var currentMonth = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+
+            var UserAccounting = await _context.ProfitLossSituation
+                .FirstOrDefaultAsync(x => x.OwnerId == request.OwnerId &&
+                                        x.Date.Value.Year == currentMonth.Year &&
+                                              x.Date.Value.Month == currentMonth.Month, cancellationToken);
+
+            if (UserAccounting == null)
             {
                 return new GetProfitLossSituationQueryResponse
                 {
@@ -35,7 +41,7 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetProfitLossSit
             {
                 IsSuccess = true,
                 Message = "Başarılı.",
-                Data = data
+                Data = UserAccounting
             };
         }
     }

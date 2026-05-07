@@ -1,6 +1,8 @@
 ﻿using Application.Features.Command.MaterialTransactionCommand.ReduceBackPanel;
+using Application.Features.Command.MaterialTransactionCommand.ReduceGlue;
 using Application.Features.Command.MaterialTransactionCommand.ReducePvcBand;
 using Application.Interface;
+using Domain.Entitiy;
 using Domain.Entitiy.Material;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +33,20 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceMdf
             var Mdf = await _context.Mdf.
                 FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerID && x.Id.ToString() == request.MdfId);
 
+            var UserAccounting = await _context.ProfitLossSituation
+                  .FirstOrDefaultAsync( x => x.OwnerId == request.OwnerID &&
+                                        x.Date.Value.Year == DateTime.UtcNow.Year &&
+                                        x.Date.Value.Month == DateTime.UtcNow.Month, cancellationToken);
+
+            if (UserAccounting == null)
+            {
+                return new ReduceMdfCommandResponse
+                {
+                    IsSuccess = false,
+                    Message = "Kullanıcı muhasebe bilgilerine ulaşılamadı"
+                };
+            }
+
             if (Mdf == null)
             {
                 return new ReduceMdfCommandResponse
@@ -59,6 +75,25 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReduceMdf
             }
 
             Mdf.Stock -= request.Count;
+
+
+            if (request.IsSale == true)
+            {
+                var Sale = new Income
+                {
+                    Amount = request.Count * request.UnitPrice ?? 0f,
+                    Description = request.SaleDescription,
+                    IncomeDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
+                    OwnerId = request.OwnerID,
+                };
+
+                await _context.Incomes.AddAsync(Sale, cancellationToken);
+
+                UserAccounting.TotalProfit += Sale.Amount;
+                UserAccounting.LastSituation = UserAccounting.GetLastSituation();
+
+                await _context.Incomes.AddAsync(Sale, cancellationToken);
+            }
 
             try
             {

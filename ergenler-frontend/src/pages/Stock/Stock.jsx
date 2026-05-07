@@ -230,11 +230,16 @@ export default function Stock() {
             <tbody>
               {data.map((item, idx) => (
                 <tr key={item.id || item.Id || idx}>
-                  {columns.map((col) => (
-                    <td key={col}>
-                      {item[col] ?? item[col.charAt(0).toUpperCase() + col.slice(1)] ?? '-'}
-                    </td>
-                  ))}
+                  {columns.map((col) => {
+                    let val = item[col] ?? item[col.charAt(0).toUpperCase() + col.slice(1)];
+                    if (val === null || val === undefined) val = '-';
+                    else if (activeTab === 'pvcBand' && col === 'thickness' && typeof val === 'number') {
+                      val = (val / 10).toString().replace('.', ',') + ' mm';
+                    }
+                    return (
+                      <td key={col}>{val}</td>
+                    );
+                  })}
                   <td>{getStockBadge(item.stock ?? item.Stock)}</td>
                   <td style={{ display: 'flex', gap: '0.5rem' }}>
                     <button 
@@ -336,7 +341,9 @@ export default function Stock() {
                       >
                         <option value="">Seçiniz...</option>
                         {popularThicknesses.map((t) => (
-                          <option key={t} value={t}>{t} mm</option>
+                          <option key={t} value={t}>
+                            {activeTab === 'pvcBand' ? (parseFloat(t) / 10).toString().replace('.', ',') : t} mm
+                          </option>
                         ))}
                         <option value="Diğer">Diğer (Manuel Gir)</option>
                       </select>
@@ -345,7 +352,7 @@ export default function Stock() {
                           className="form-input"
                           type="number"
                           style={{ marginTop: '0.5rem' }}
-                          placeholder="Kalınlık giriniz (mm)"
+                          placeholder={`Kalınlık giriniz ${activeTab === 'pvcBand' ? '(örn: 0.8 mm için 8 girin)' : '(mm)'}`}
                           value={formData[`${col}Custom`] || ''}
                           onChange={(e) => setFormData({ ...formData, [`${col}Custom`]: e.target.value })}
                         />

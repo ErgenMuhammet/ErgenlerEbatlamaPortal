@@ -1,4 +1,4 @@
-﻿using Application.Interface;
+using Application.Interface;
 using Domain.Entitiy;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -25,20 +25,21 @@ namespace Application.Features.Command.UserTransaction.PasswordRecovery
         public async Task<PasswordRecoveryCommandResponse> Handle(PasswordRecoveryCommandRequest request, CancellationToken cancellationToken)
         {
            var user = await _userManager.FindByEmailAsync(request.Email);
-           var passwordtoken = await _userManager.GeneratePasswordResetTokenAsync(user);
-           var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(passwordtoken));
-
-
             if (user == null)
             {
                 return new PasswordRecoveryCommandResponse
                 {
-                    Message = "Bu email adresi ile eşleşen bir kullanıcı bulunamadı."
+                    Message = "Bu email adresi ile eşleşen bir kullanıcı bulunamadı.",
+                    IsSucces = false
                 };
             }
 
-            string baseUrl = "http://localhost:5233";
-            var confirmationLink = $"{baseUrl}/Portal/ValidateToken?userId={user.Id}&token={encodedToken}";
+            var passwordtoken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(passwordtoken));
+
+            string baseUrl = "http://localhost:5173";
+
+            var confirmationLink = $"{baseUrl}/reset-password?userId={user.Id}&token={encodedToken}";
             try
             {
                
@@ -64,8 +65,6 @@ namespace Application.Features.Command.UserTransaction.PasswordRecovery
                 Message = "Email adresinize şifre sıfırlama linkiniz gönderilmiştir.İşleminize oradan devam edebilirsiniz.",
                 IsSucces = true
             };
-
-
         }
     }
 }

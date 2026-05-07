@@ -16,6 +16,12 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReducePvcBand
         [JsonIgnore]
         public string? PvcBandId { get; set; }
 
+        public bool? IsSale { get; set; } = false;
+        public string? SaleDescription { get; set; }
+
+        public float? UnitPrice { get; set; }
+
+
         public int Count { get; set; }
     }
 }

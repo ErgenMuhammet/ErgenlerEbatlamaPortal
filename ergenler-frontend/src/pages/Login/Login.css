@@ -215,3 +215,32 @@
 .auth-tab:hover:not(.active) {
   color: var(--text-primary);
 }
+
+/* --- Forgot Password --- */
+.forgot-password-link {
+  background: none;
+  border: none;
+  color: var(--primary-400);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+
+.forgot-password-link:hover {
+  color: var(--primary-300);
+  text-decoration: underline;
+}
+
+.btn-secondary {
+  background: var(--surface-200);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--surface-300);
+  box-shadow: none;
+  transform: translateY(0);
+}

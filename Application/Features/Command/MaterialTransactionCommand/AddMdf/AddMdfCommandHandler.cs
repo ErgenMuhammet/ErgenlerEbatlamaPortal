@@ -1,4 +1,5 @@
-﻿using Application.Features.Command.MaterialTransactionCommand.AddScrap;
+﻿using Application.Features.Command.MaterialTransactionCommand.AddPvcBand;
+using Application.Features.Command.MaterialTransactionCommand.AddScrap;
 using Application.Interface;
 using Domain.Entitiy;
 using Domain.Entitiy.Material;
@@ -27,6 +28,21 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddMdf
         {
             var user = await _userManager.FindByIdAsync(request.OwnerId);
 
+            var UserAccounting = await _context.ProfitLossSituation
+            .FirstOrDefaultAsync( x => x.OwnerId == request.OwnerId &&
+                                  x.Date.Value.Year == DateTime.UtcNow.Year &&
+                                  x.Date.Value.Month == DateTime.UtcNow.Month, cancellationToken);
+
+            if (UserAccounting == null)
+            {
+                return new AddMdfCommandResponse
+                {
+                    IsSucces = false,
+                    Message = "Kullanıcı muhasebe bilgilerine ulaşılamadı"
+                };
+            }
+
+
             if (user == null)
             {
                 return new AddMdfCommandResponse
@@ -44,6 +60,22 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddMdf
 
             try
             {
+                if (request.IsPurchase == true)
+                {
+                    var Purchase = new Expense
+                    {
+                        Amount = request.Stock * request.UnitPrice ?? 0f,
+                        Description = request.SaleDescription,
+                        ExpenseDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
+                        OwnerId = request.OwnerId,
+                    };
+
+                    UserAccounting.TotalLoss += Purchase.Amount;
+                    UserAccounting.LastSituation = UserAccounting.GetLastSituation();
+
+                    await _context.Expense.AddAsync(Purchase, cancellationToken);
+                }
+
                 if (material != null)
                 {
                     material.Stock += request.Stock;
@@ -56,7 +88,8 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddMdf
                         Message = "Mdf stoğu başarıyla güncellendi",
                     };
 
-                }
+                }         
+                
                 else
                 {
                     var mdf = new Mdf

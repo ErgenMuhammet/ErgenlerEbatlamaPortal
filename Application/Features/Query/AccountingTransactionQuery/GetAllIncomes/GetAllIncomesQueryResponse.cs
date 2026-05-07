@@ -1,4 +1,4 @@
-﻿using Application.DTOs;
+using Application.DTOs;
 using Domain.Entitiy;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,8 @@ namespace Application.Features.Query.AccountingTransactionQuery.GetAllIncomes
     {
         public bool IsSucces { get; set; }
         public string? Message { get; set; }
-        public IList<IncomesDto> Incomes { get; set; }
+        public List<IncomesDto>? CreditCardIncomes { get; set; }
+        public List<IncomesDto>? CashIncomes { get; set; }
+        public List<IncomesDto>? OtherIncomes { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Application.Features.Command.UserTransaction.ConfirmEmail;
+using Application.Features.Command.UserTransaction.ConfirmEmail;
 using Application.Features.Command.UserTransaction.PasswordRecovery;
 using Application.Features.Command.UserTransaction.Register;
 using Application.Features.Command.UserTransaction.ValidatePasswordToken;
@@ -12,6 +12,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Application.Features.Query.GetUserTransactionQuery.Login;
 using Application.Features.Command.UpdateUserDefaultProperty;
+using Application.Features.Command.UserTransactionCommands.ChangeThePasswordAfterTokenVeriyfied;
+using Application.Features.Query.GetUserTransactionQuery.GetUserProporties;
+using Application.Features.Query.GetUserTransactionQuery.GetMyChatList;
+using Application.Features.Query.GetUserTransactionQuery.GetMyPastMessage;
+using Application.Features.Query.GetUserTransactionQuery.GetMyNotification;
+
+
 
 namespace ErgenlerEbatlamaPortalAPI.Controllers
 {
@@ -43,7 +50,7 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
 
         }
         
-        [HttpPost("KayıtOl")]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterCommandRequest request)
         {
             var result = await _mediatR.Send(request);
@@ -56,13 +63,13 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
 
     
         [HttpPost("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail([FromQuery] string userid, string token)
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string userid, [FromQuery] string token)
         {
-            var request = new ConfirmEmailCommandRequest
-            {
-                UserId = userid,
-                Token = token,
-            };
+            var request = new ConfirmEmailCommandRequest();     
+            
+           request.UserId = userid;
+            request.Token = token;
+            
             var response = await _mediatR.Send(request);
 
             if (response.IsSucces)
@@ -85,14 +92,26 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
         }
 
         [HttpPatch("ValidateToken")]
-        public async Task<IActionResult> ValidateToken([FromQuery] string userId, [FromQuery] string token, [FromBody] ValidatePasswordTokenCommandRequest request)
+        public async Task<IActionResult> ValidateToken([FromQuery] ValidatePasswordTokenCommandRequest request)
         {
-            request.userId = userId;
-            request.passwordToken = token;
-
+            
             var result = await _mediatR.Send(request);
 
             if (!result.IsSucces)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [HttpPatch("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromQuery] string id, [FromQuery] string token, [FromBody] ResetThePasswordCommandRequest request)
+        {
+            request.UserId = id;
+            request.Token = token;
+
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
                 return BadRequest(result);
 
             return Ok(result);
@@ -119,6 +138,79 @@ namespace ErgenlerEbatlamaPortalAPI.Controllers
         public async Task<IActionResult> UpdateUserJobProperty([FromBody] UpdateJobsPropertyCommandRequest request)
         {
             request.UserId = OwnerId;
+
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPatch("GetMyProporties")]
+        public async Task<IActionResult> GetMyProporties()
+        {
+            var request = new GetUserProportiesRequest();
+
+            request.OwnerId = OwnerId;
+
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSucces)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPatch("GetMyChatList")]
+        public async Task<IActionResult> GetMyChatList()
+        { 
+            var request = new GetMyChatListRequest();
+
+            request.OwnerId = OwnerId;
+            
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPatch("GetMyChatHistory/{TargetId}")]
+        public async Task<IActionResult> GetMyChatHistory([FromRoute] string TargetId)
+        {
+            var request = new GetMyPastMessageRequest();
+
+            request.OwnerId = OwnerId;
+            request.TargetId = TargetId;
+
+            var result = await _mediatR.Send(request);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPatch("GetMyNotifications")]
+        public async Task<IActionResult> GetMyNotifications()
+        {
+            var request = new GetMyNotificationRequest();
+
+            request.OwnerId = OwnerId;
 
             var result = await _mediatR.Send(request);
 

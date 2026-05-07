@@ -23,7 +23,6 @@ namespace Persistence.Configuration
 
             builder.Property(b => b.AdvertisementAddress).IsRequired().HasMaxLength(250);
 
-            builder.Property(c => c.ImgUrl).IsRequired();
 
             builder.Property(d => d.Latitude).
                 HasColumnType("decimal(10 , 8)");

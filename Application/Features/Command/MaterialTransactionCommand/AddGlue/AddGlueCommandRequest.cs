@@ -18,6 +18,12 @@ namespace Application.Features.Command.MaterialTransactionCommand.AddGlue
         public string? Brand { get; set; }
         public int Stock { get; set; }
 
-       
+        public bool? IsPurchase { get; set; } = false;
+        public string? SaleDescription { get; set; }
+
+        public float? UnitPrice { get; set; }
+
+
+
     }
 }

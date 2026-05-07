@@ -5,9 +5,12 @@ import Login from './pages/Login/Login';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Stock from './pages/Stock/Stock';
 import Orders from './pages/Orders/Orders';
+import Measurements from './pages/Measurements/Measurements';
 import Accounting from './pages/Accounting/Accounting';
 import Advertisements from './pages/Advertisements/Advertisements';
 import Profile from './pages/Profile/Profile';
+import Chat from './pages/Chat/Chat';
+import ResetPassword from './pages/ResetPassword/ResetPassword';
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
@@ -48,6 +51,14 @@ function App() {
               </PublicRoute>
             }
           />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <ResetPassword />
+              </PublicRoute>
+            }
+          />
 
           {/* Protected with Layout */}
           <Route
@@ -60,9 +71,11 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/stock" element={<Stock />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/measurements" element={<Measurements />} />
             <Route path="/accounting" element={<Accounting />} />
             <Route path="/advertisements" element={<Advertisements />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/chat" element={<Chat />} />
           </Route>
 
           {/* Fallback */}

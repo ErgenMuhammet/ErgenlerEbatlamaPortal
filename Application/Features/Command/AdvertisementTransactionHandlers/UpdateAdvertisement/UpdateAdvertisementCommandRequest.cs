@@ -20,6 +20,5 @@ namespace Application.Features.Command.AdvertisementTransactionHandlers.UpdateAd
         public string AdvertisementAddress { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
-        public string ImgUrl { get; set; }
     }
 }

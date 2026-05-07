@@ -13,6 +13,6 @@ namespace Application.Features.Command.AdvertisementTransactionHandlers.OfferToA
         [JsonIgnore]
         public string? OwnerId { get; set; }
 
-        public string AdvertisementId { get; set; }
+        public string? AdvertisementId { get; set; }
     }
 }

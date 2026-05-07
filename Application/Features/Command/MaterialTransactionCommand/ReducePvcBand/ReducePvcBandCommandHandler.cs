@@ -1,5 +1,7 @@
 ﻿using Application.Features.Command.MaterialTransactionCommand.ReduceBackPanel;
+using Application.Features.Command.MaterialTransactionCommand.ReduceMdf;
 using Application.Interface;
+using Domain.Entitiy;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,6 +30,20 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReducePvcBand
 
             var PvcBand = await _context.PvcBand.
                 FirstOrDefaultAsync(x => x.OwnerID.ToString() == request.OwnerId && x.Id.ToString() == request.PvcBandId);
+     
+            var UserAccounting = await _context.ProfitLossSituation
+                  .FirstOrDefaultAsync( x => x.OwnerId == request.OwnerId &&
+                                        x.Date.Value.Year == DateTime.UtcNow.Year &&
+                                        x.Date.Value.Month == DateTime.UtcNow.Month, cancellationToken);
+
+            if (UserAccounting == null)
+            {
+                return new ReducePvcBandCommandResponse
+                {
+                    IsSuccess = false,
+                    Message = "Kullanıcı muhasebe bilgilerine ulaşılamadı"
+                };
+            }
 
             if (PvcBand == null)
             {
@@ -58,6 +74,38 @@ namespace Application.Features.Command.MaterialTransactionCommand.ReducePvcBand
             }
 
             PvcBand.Stock -= request.Count;
+
+            if (request.IsSale == true)
+            {
+                var Sale = new Income
+                {
+                    Amount = request.Count * request.UnitPrice ?? 0f,
+                    Description = request.SaleDescription,
+                    IncomeDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
+                    OwnerId = request.OwnerId,
+                };
+
+                await _context.Incomes.AddAsync(Sale, cancellationToken);
+
+                UserAccounting.TotalProfit += Sale.Amount;
+                UserAccounting.LastSituation = UserAccounting.GetLastSituation();
+
+                await _context.Incomes.AddAsync(Sale, cancellationToken);
+            }
+
+
+            if (request.IsSale == true)
+            {
+                var Sale = new Income
+                {
+                    Amount = request.Count * request.UnitPrice ?? 0f,
+                    Description = request.SaleDescription,
+                    IncomeDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
+                    OwnerId = request.OwnerId,
+                };
+
+                await _context.Incomes.AddAsync(Sale, cancellationToken);
+            }
 
             try
             {

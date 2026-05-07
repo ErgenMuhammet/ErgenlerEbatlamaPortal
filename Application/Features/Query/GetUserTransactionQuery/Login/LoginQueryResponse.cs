@@ -9,6 +9,7 @@ namespace Application.Features.Query.GetUserTransactionQuery.Login
 {
     public class LoginQueryResponse
     {
+        public string? Name { get; set; }
         public bool IsSucces { get; set; }
         public string? Message { get; set; }
         public string? Token { get; set; }
